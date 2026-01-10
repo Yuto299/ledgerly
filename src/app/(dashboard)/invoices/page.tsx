@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useInvoices } from "@/features/invoices/hooks/useInvoices";
+import { useInvoices, useDeleteInvoice } from "@/features/invoices/hooks/useInvoices";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
 import { formatDate } from "@/lib/utils";
 import { formatCurrency } from "@/lib/money/formatter";
+import { useToast } from "@/components/providers/ToastProvider";
 
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: "下書き",
@@ -29,6 +30,25 @@ export default function InvoicesPage() {
   const { data, isLoading, error } = useInvoices({
     status: statusFilter || undefined,
   });
+  const { mutate: deleteInvoice } = useDeleteInvoice();
+  const { addToast } = useToast();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = (invoiceId: string, invoiceNumber: string) => {
+    if (window.confirm(`請求書「${invoiceNumber}」を削除しますか？\n関連する入金記録も削除されます。`)) {
+      setDeletingId(invoiceId);
+      deleteInvoice(invoiceId, {
+        onSuccess: () => {
+          addToast("請求書を削除しました", "success");
+          setDeletingId(null);
+        },
+        onError: (error) => {
+          addToast(`削除に失敗しました: ${error.message}`, "error");
+          setDeletingId(null);
+        },
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -49,11 +69,11 @@ export default function InvoicesPage() {
   const invoices = data?.invoices || [];
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">請求書管理</h1>
+    <div className="px-4 py-4 md:px-0 md:py-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">請求書管理</h1>
         <Link href="/invoices/new">
-          <Button>+ 新規請求書</Button>
+          <Button className="w-full sm:w-auto">+ 新規請求書</Button>
         </Link>
       </div>
 
@@ -85,7 +105,7 @@ export default function InvoicesPage() {
         </Card>
       ) : (
         <Card padding="sm">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>

@@ -61,11 +61,11 @@ export default function ExpensesPage() {
   const projects = projectsData?.projects || [];
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">経費</h1>
+    <div className="px-4 py-4 md:px-0 md:py-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">経費管理</h1>
         <Link href="/expenses/new">
-          <Button>経費登録</Button>
+          <Button className="w-full sm:w-auto">+ 新規経費</Button>
         </Link>
       </div>
 

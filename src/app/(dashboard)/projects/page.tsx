@@ -57,11 +57,11 @@ export default function ProjectsPage() {
   const projects = data?.projects || [];
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">案件管理</h1>
+    <div className="px-4 py-4 md:px-0 md:py-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">案件管理</h1>
         <Link href="/projects/new">
-          <Button>+ 新規案件</Button>
+          <Button className="w-full sm:w-auto">+ 新規案件</Button>
         </Link>
       </div>
 
@@ -94,7 +94,7 @@ export default function ProjectsPage() {
         </Card>
       ) : (
         <Card padding="sm">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>

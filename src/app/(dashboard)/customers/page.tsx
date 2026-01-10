@@ -1,14 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { useCustomers } from "@/features/customers/hooks/useCustomers";
+import { useState } from "react";
+import { useCustomers, useDeleteCustomer } from "@/features/customers/hooks/useCustomers";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
 import { TableSkeleton } from "@/components/atoms/Skeleton";
 import { formatDate } from "@/lib/utils";
+import { useToast } from "@/components/providers/ToastProvider";
 
 export default function CustomersPage() {
   const { data, isLoading, error } = useCustomers();
+  const { mutate: deleteCustomer } = useDeleteCustomer();
+  const { addToast } = useToast();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = (customerId: string, customerName: string) => {
+    if (window.confirm(`「${customerName}」を削除しますか？\nこの操作は元に戻せません。`)) {
+      setDeletingId(customerId);
+      deleteCustomer(customerId, {
+        onSuccess: () => {
+          addToast("顧客を削除しました", "success");
+          setDeletingId(null);
+        },
+        onError: (error) => {
+          addToast(`削除に失敗しました: ${error.message}`, "error");
+          setDeletingId(null);
+        },
+      });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -38,11 +59,11 @@ export default function CustomersPage() {
   const customers = data?.customers || [];
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">顧客管理</h1>
+    <div className="px-4 py-4 md:px-0 md:py-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">顧客管理</h1>
         <Link href="/customers/new">
-          <Button>+ 新規顧客</Button>
+          <Button className="w-full sm:w-auto">+ 新規顧客</Button>
         </Link>
       </div>
 
@@ -54,7 +75,7 @@ export default function CustomersPage() {
         </Card>
       ) : (
         <Card padding="sm">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -104,10 +125,17 @@ export default function CustomersPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <Link
                         href={`/customers/${customer.id}/edit`}
-                        className="text-primary-600 hover:text-primary-900"
+                        className="text-primary-600 hover:text-primary-900 mr-4"
                       >
                         編集
                       </Link>
+                      <button
+                        onClick={() => handleDelete(customer.id, customer.name)}
+                        disabled={deletingId === customer.id}
+                        className="text-red-600 hover:text-red-900 disabled:opacity-50"
+                      >
+                        {deletingId === customer.id ? "削除中..." : "削除"}
+                      </button>
                     </td>
                   </tr>
                 ))}

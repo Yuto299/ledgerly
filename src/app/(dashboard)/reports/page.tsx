@@ -59,14 +59,14 @@ export default function ReportsPage() {
   }
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">月別レポート</h1>
-        <div className="flex gap-4">
+    <div className="px-4 py-4 md:px-0 md:py-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold">月別レポート</h1>
+        <div className="flex gap-4 w-full sm:w-auto">
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg"
+            className="flex-1 sm:flex-initial px-4 py-2 border border-gray-300 rounded-lg text-sm sm:text-base"
           >
             {monthOptions.map((month) => (
               <option key={month} value={month}>
@@ -79,12 +79,12 @@ export default function ReportsPage() {
 
       {/* サマリカード */}
       {summary && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
           <Card>
-            <h3 className="text-sm font-medium text-gray-600 mb-2">
+            <h3 className="text-xs sm:text-sm font-medium text-gray-600 mb-2">
               売上（入金ベース）
             </h3>
-            <p className="text-3xl font-bold text-gray-900">
+            <p className="text-2xl sm:text-3xl font-bold text-gray-900">
               {formatCurrency(summary.revenue)}
             </p>
             <p className="text-sm text-gray-500 mt-2">入金された金額</p>
@@ -142,9 +142,9 @@ export default function ReportsPage() {
       )}
 
       {/* 月別推移グラフ */}
-      <Card className="mb-8">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">月別推移</h2>
+      <Card className="mb-6 md:mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+          <h2 className="text-base sm:text-lg font-semibold">月別推移</h2>
           <select
             value={trendMonths}
             onChange={(e) => setTrendMonths(Number(e.target.value))}
@@ -156,50 +156,60 @@ export default function ReportsPage() {
           </select>
         </div>
         {trend && trend.length > 0 ? (
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={trend}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip formatter={(value: number) => formatCurrency(value)} />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="revenue"
-                stroke="#10b981"
-                name="売上"
-                strokeWidth={2}
-              />
-              <Line
-                type="monotone"
-                dataKey="expenses"
-                stroke="#ef4444"
-                name="経費"
-                strokeWidth={2}
-              />
-              <Line
-                type="monotone"
-                dataKey="profit"
-                stroke="#3b82f6"
-                name="利益"
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+            <ResponsiveContainer width="100%" height={350} minWidth={400}>
+              <LineChart
+                data={trend}
+                margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                <YAxis
+                  tickFormatter={(value) => `¥${(value / 1000).toFixed(0)}k`}
+                  tick={{ fontSize: 12 }}
+                />
+                <Tooltip formatter={(value: number) => formatCurrency(value)} />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#10b981"
+                  name="売上"
+                  strokeWidth={2}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="expenses"
+                  stroke="#ef4444"
+                  name="経費"
+                  strokeWidth={2}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="profit"
+                  stroke="#3b82f6"
+                  name="利益"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         ) : (
-          <div className="h-[400px] flex items-center justify-center text-gray-500">
+          <div className="h-[350px] flex items-center justify-center text-gray-500">
             データがありません
           </div>
         )}
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
         {/* 経費カテゴリ別内訳 */}
         <Card>
-          <h2 className="text-lg font-semibold mb-4">経費カテゴリ別内訳</h2>
+          <h2 className="text-base sm:text-lg font-semibold mb-4">
+            経費カテゴリ別内訳
+          </h2>
           {expenseBreakdown && expenseBreakdown.length > 0 ? (
             <>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={280}>
                 <PieChart>
                   <Pie
                     data={expenseBreakdown}
@@ -207,10 +217,19 @@ export default function ReportsPage() {
                     nameKey="categoryName"
                     cx="50%"
                     cy="50%"
-                    outerRadius={100}
-                    label={(entry) =>
-                      `${entry.categoryName}: ${formatCurrency(entry.amount)}`
-                    }
+                    outerRadius={80}
+                    label={(entry) => {
+                      const percent = (
+                        (entry.amount /
+                          expenseBreakdown.reduce(
+                            (sum, e) => sum + e.amount,
+                            0
+                          )) *
+                        100
+                      ).toFixed(0);
+                      return `${entry.categoryName} (${percent}%)`;
+                    }}
+                    labelLine={true}
                   >
                     {expenseBreakdown.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.categoryColor} />
@@ -253,27 +272,51 @@ export default function ReportsPage() {
 
         {/* 案件別売上 */}
         <Card>
-          <h2 className="text-lg font-semibold mb-4">案件別売上</h2>
+          <h2 className="text-base sm:text-lg font-semibold mb-4">
+            案件別売上
+          </h2>
           {projectSales && projectSales.length > 0 ? (
             <>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={projectSales.slice(0, 10)}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="projectName"
-                    angle={-45}
-                    textAnchor="end"
-                    height={100}
-                  />
-                  <YAxis />
-                  <Tooltip
-                    formatter={(value: number) => formatCurrency(value)}
-                  />
-                  <Legend />
-                  <Bar dataKey="totalBilled" fill="#3b82f6" name="請求額" />
-                  <Bar dataKey="totalPaid" fill="#10b981" name="入金額" />
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+                <ResponsiveContainer width="100%" height={280} minWidth={350}>
+                  <BarChart
+                    data={projectSales.slice(0, 10)}
+                    margin={{ top: 5, right: 10, left: 0, bottom: 60 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                      dataKey="projectName"
+                      angle={-30}
+                      textAnchor="end"
+                      height={60}
+                      interval={0}
+                      tick={{ fontSize: 11 }}
+                    />
+                    <YAxis
+                      tickFormatter={(value) =>
+                        `¥${(value / 1000).toFixed(0)}k`
+                      }
+                      tick={{ fontSize: 11 }}
+                    />
+                    <Tooltip
+                      formatter={(value: number) => formatCurrency(value)}
+                    />
+                    <Legend />
+                    <Bar
+                      dataKey="totalBilled"
+                      fill="#3b82f6"
+                      name="請求額"
+                      radius={[4, 4, 0, 0]}
+                    />
+                    <Bar
+                      dataKey="totalPaid"
+                      fill="#10b981"
+                      name="入金額"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
               <div className="mt-4 space-y-2">
                 {projectSales.slice(0, 5).map((item) => (
                   <div
