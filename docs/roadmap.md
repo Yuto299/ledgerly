@@ -34,120 +34,120 @@
 
 ---
 
-## Phase 2: 顧客・案件管理 🚧
+## Phase 2: 顧客・案件管理 ✅
 
-### 2.1 顧客管理（Backend）
+### 2.1 顧客管理（Backend）✅
 
-- [ ] CustomerRepository（CRUD 操作）
-- [ ] Customer スキーマ（Zod）
-- [ ] Usecase 実装
-  - [ ] CreateCustomer
-  - [ ] UpdateCustomer
-  - [ ] DeleteCustomer（論理削除）
-  - [ ] GetCustomerById
-  - [ ] ListCustomers（ページネーション）
-- [ ] API Route Handlers
-  - [ ] GET /api/customers
-  - [ ] POST /api/customers
-  - [ ] GET /api/customers/:id
-  - [ ] PUT /api/customers/:id
-  - [ ] DELETE /api/customers/:id
+- [x] CustomerRepository（CRUD 操作）
+- [x] Customer スキーマ（Zod）
+- [x] Usecase 実装
+  - [x] CreateCustomer
+  - [x] UpdateCustomer
+  - [x] DeleteCustomer（論理削除）
+  - [x] GetCustomerById
+  - [x] ListCustomers（ページネーション）
+- [x] API Route Handlers
+  - [x] GET /api/customers
+  - [x] POST /api/customers
+  - [x] GET /api/customers/:id
+  - [x] PUT /api/customers/:id
+  - [x] DELETE /api/customers/:id
 
-### 2.2 顧客管理（Frontend）
+### 2.2 顧客管理（Frontend）✅
 
-- [ ] 顧客一覧画面
-- [ ] 顧客詳細画面
-- [ ] 顧客作成フォーム
-- [ ] 顧客編集フォーム
-- [ ] TanStack Query 統合
+- [x] 顧客一覧画面
+- [x] 顧客詳細画面
+- [x] 顧客作成フォーム
+- [x] 顧客編集フォーム
+- [x] TanStack Query 統合
 
-### 2.3 案件管理（Backend）
+### 2.3 案件管理（Backend）✅
 
-- [ ] ProjectRepository（CRUD 操作）
-- [ ] Project スキーマ（Zod）
-- [ ] Usecase 実装
-  - [ ] CreateProject
-  - [ ] UpdateProject
-  - [ ] DeleteProject
-  - [ ] GetProjectById
-  - [ ] ListProjects（フィルタ・ページネーション）
-- [ ] API Route Handlers
-  - [ ] GET /api/projects
-  - [ ] POST /api/projects
-  - [ ] GET /api/projects/:id
-  - [ ] PUT /api/projects/:id
-  - [ ] DELETE /api/projects/:id
+- [x] ProjectRepository（CRUD 操作）
+- [x] Project スキーマ（Zod）
+- [x] Usecase 実装
+  - [x] CreateProject
+  - [x] UpdateProject
+  - [x] DeleteProject
+  - [x] GetProjectById
+  - [x] ListProjects（フィルタ・ページネーション）
+- [x] API Route Handlers
+  - [x] GET /api/projects
+  - [x] POST /api/projects
+  - [x] GET /api/projects/:id
+  - [x] PUT /api/projects/:id
+  - [x] DELETE /api/projects/:id
 
-### 2.4 案件管理（Frontend）
+### 2.4 案件管理（Frontend）✅
 
-- [ ] 案件一覧画面
-- [ ] 案件詳細画面（請求書・経費一覧含む）
-- [ ] 案件作成フォーム
-- [ ] 案件編集フォーム
-
----
-
-## Phase 3: 請求書・入金管理
-
-### 3.1 請求書管理（Backend）
-
-- [ ] InvoiceRepository
-- [ ] InvoiceItemRepository
-- [ ] Invoice スキーマ（Zod）
-- [ ] Domain Service: InvoiceService
-  - [ ] 明細から合計金額を算出
-  - [ ] ステータス更新ロジック
-- [ ] Usecase 実装
-  - [ ] CreateInvoice（明細含む）
-  - [ ] UpdateInvoice
-  - [ ] DeleteInvoice
-  - [ ] MarkInvoiceSent（送付済み）
-  - [ ] GetInvoiceById（明細・入金履歴含む）
-  - [ ] ListInvoices（フィルタ・ページネーション）
-- [ ] API Route Handlers
-  - [ ] GET /api/invoices
-  - [ ] POST /api/invoices
-  - [ ] GET /api/invoices/:id
-  - [ ] PUT /api/invoices/:id
-  - [ ] DELETE /api/invoices/:id
-  - [ ] POST /api/invoices/:id/send
-
-### 3.2 請求書管理（Frontend）
-
-- [ ] 請求書一覧画面
-- [ ] 請求書詳細画面
-- [ ] 請求書作成フォーム
-  - [ ] 明細テーブル（動的追加・削除）
-  - [ ] 合計金額自動計算
-- [ ] 請求書編集フォーム
-
-### 3.3 入金管理（Backend）
-
-- [ ] PaymentRepository
-- [ ] Payment スキーマ（Zod）
-- [ ] Domain Service: PaymentService
-  - [ ] 入金合計計算
-  - [ ] 自動 PAID 更新ロジック
-- [ ] Usecase 実装
-  - [ ] RegisterPayment（入金登録 + ステータス自動更新）
-  - [ ] UpdatePayment
-  - [ ] DeletePayment（入金削除 + ステータス再計算）
-  - [ ] ListPaymentsByInvoice
-- [ ] API Route Handlers
-  - [ ] POST /api/invoices/:id/payments
-  - [ ] GET /api/invoices/:id/payments
-  - [ ] PUT /api/payments/:id
-  - [ ] DELETE /api/payments/:id
-
-### 3.4 入金管理（Frontend）
-
-- [ ] 入金登録フォーム（モーダル）
-- [ ] 入金履歴一覧（請求書詳細内）
-- [ ] 入金編集・削除
+- [x] 案件一覧画面
+- [x] 案件詳細画面（請求書・経費一覧含む）
+- [x] 案件作成フォーム
+- [x] 案件編集フォーム
 
 ---
 
-## Phase 4: 経費管理
+## Phase 3: 請求書・入金管理 ✅
+
+### 3.1 請求書管理（Backend）✅
+
+- [x] InvoiceRepository
+- [x] InvoiceItemRepository
+- [x] Invoice スキーマ（Zod）
+- [x] Domain Service: InvoiceService
+  - [x] 明細から合計金額を算出
+  - [x] ステータス更新ロジック
+- [x] Usecase 実装
+  - [x] CreateInvoice（明細含む）
+  - [x] UpdateInvoice
+  - [x] DeleteInvoice
+  - [x] MarkInvoiceSent（送付済み）
+  - [x] GetInvoiceById（明細・入金履歴含む）
+  - [x] ListInvoices（フィルタ・ページネーション）
+- [x] API Route Handlers
+  - [x] GET /api/invoices
+  - [x] POST /api/invoices
+  - [x] GET /api/invoices/:id
+  - [x] PUT /api/invoices/:id
+  - [x] DELETE /api/invoices/:id
+  - [x] POST /api/invoices/:id/send
+
+### 3.2 請求書管理（Frontend）✅
+
+- [x] 請求書一覧画面
+- [x] 請求書詳細画面
+- [x] 請求書作成フォーム
+  - [x] 明細テーブル（動的追加・削除）
+  - [x] 合計金額自動計算
+- [x] 請求書編集フォーム
+
+### 3.3 入金管理（Backend）✅
+
+- [x] PaymentRepository
+- [x] Payment スキーマ（Zod）
+- [x] Domain Service: PaymentService
+  - [x] 入金合計計算
+  - [x] 自動 PAID 更新ロジック
+- [x] Usecase 実装
+  - [x] RegisterPayment（入金登録 + ステータス自動更新）
+  - [x] UpdatePayment
+  - [x] DeletePayment（入金削除 + ステータス再計算）
+  - [x] ListPaymentsByInvoice
+- [x] API Route Handlers
+  - [x] POST /api/invoices/:id/payments
+  - [x] GET /api/invoices/:id/payments
+  - [x] PUT /api/payments/:id
+  - [x] DELETE /api/payments/:id
+
+### 3.4 入金管理（Frontend）✅
+
+- [x] 入金登録フォーム（モーダル）
+- [x] 入金履歴一覧（請求書詳細内）
+- [x] 入金削除機能
+
+---
+
+## Phase 4: 経費管理 🚧
 
 ### 4.1 経費カテゴリ管理（Backend）
 
@@ -324,11 +324,11 @@
 | Phase   | 進捗 | 備考         |
 | ------- | ---- | ------------ |
 | Phase 1 | 100% | 完了         |
-| Phase 2 | 0%   | 次のステップ |
-| Phase 3 | 0%   | -            |
-| Phase 4 | 0%   | -            |
+| Phase 2 | 100% | 完了         |
+| Phase 3 | 100% | 完了         |
+| Phase 4 | 0%   | 次のステップ |
 | Phase 5 | 0%   | -            |
 | Phase 6 | 0%   | -            |
 | Phase 7 | 0%   | -            |
 
-**全体進捗: 14%**（Phase 1 完了）
+**全体進捗: 43%**（Phase 1-3 完了）

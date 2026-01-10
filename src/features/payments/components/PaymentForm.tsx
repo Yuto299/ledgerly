@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@/components/atoms/Button";
-import FormField from "@/components/molecules/FormField";
+import Label from "@/components/atoms/Label";
 import {
   CreatePaymentDto,
   createPaymentSchema,
@@ -38,28 +38,42 @@ export function PaymentForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <FormField label="入金額" error={errors.amount?.message} required>
+      <div className="space-y-1">
+        <Label htmlFor="amount" required>
+          入金額
+        </Label>
         <input
+          id="amount"
           type="number"
           {...register("amount", { valueAsNumber: true })}
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-      </FormField>
+        {errors.amount && (
+          <p className="text-sm text-red-600">{errors.amount.message}</p>
+        )}
+      </div>
 
-      <FormField label="入金日" error={errors.paidAt?.message} required>
+      <div className="space-y-1">
+        <Label htmlFor="paidAt" required>
+          入金日
+        </Label>
         <input
+          id="paidAt"
           type="date"
           {...register("paidAt")}
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-      </FormField>
+        {errors.paidAt && (
+          <p className="text-sm text-red-600">{errors.paidAt.message}</p>
+        )}
+      </div>
 
-      <FormField
-        label="支払方法"
-        error={errors.paymentMethod?.message}
-        required
-      >
+      <div className="space-y-1">
+        <Label htmlFor="paymentMethod" required>
+          支払方法
+        </Label>
         <select
+          id="paymentMethod"
           {...register("paymentMethod")}
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
@@ -68,15 +82,23 @@ export function PaymentForm({
           <option value="CASH">現金</option>
           <option value="OTHER">その他</option>
         </select>
-      </FormField>
+        {errors.paymentMethod && (
+          <p className="text-sm text-red-600">{errors.paymentMethod.message}</p>
+        )}
+      </div>
 
-      <FormField label="備考" error={errors.notes?.message}>
+      <div className="space-y-1">
+        <Label htmlFor="notes">備考</Label>
         <textarea
+          id="notes"
           {...register("notes")}
           rows={3}
           className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-      </FormField>
+        {errors.notes && (
+          <p className="text-sm text-red-600">{errors.notes.message}</p>
+        )}
+      </div>
 
       <div className="flex justify-end gap-2">
         {onCancel && (
