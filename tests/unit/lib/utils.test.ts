@@ -3,21 +3,21 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 
 describe("formatCurrency", () => {
   it("正の金額を正しくフォーマットする", () => {
-    expect(formatCurrency(1000)).toBe("¥1,000");
-    expect(formatCurrency(1234567)).toBe("¥1,234,567");
+    expect(formatCurrency(1000)).toBe("￥1,000");
+    expect(formatCurrency(1234567)).toBe("￥1,234,567");
   });
 
   it("0円を正しくフォーマットする", () => {
-    expect(formatCurrency(0)).toBe("¥0");
+    expect(formatCurrency(0)).toBe("￥0");
   });
 
   it("負の金額を正しくフォーマットする", () => {
-    expect(formatCurrency(-1000)).toBe("-¥1,000");
+    expect(formatCurrency(-1000)).toBe("-￥1,000");
   });
 
   it("小数点以下を正しく処理する", () => {
-    expect(formatCurrency(1000.5)).toBe("¥1,001");
-    expect(formatCurrency(1000.4)).toBe("¥1,000");
+    expect(formatCurrency(1000.5)).toBe("￥1,001");
+    expect(formatCurrency(1000.4)).toBe("￥1,000");
   });
 });
 
