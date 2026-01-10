@@ -43,7 +43,22 @@ export const expenseApi = {
   /**
    * 経費詳細取得
    */
-  async getById(expenseId: string): Promise<{ expense: any }> {
+  async getById(expenseId: string): Promise<{
+    expense: {
+      id: string;
+      description: string;
+      amount: number;
+      date: Date;
+      categoryId: string;
+      projectId: string | null;
+      paymentMethod: string;
+      notes: string | null;
+      category: { name: string; color: string } | null;
+      project: { id: string; name: string } | null;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+  }> {
     const response = await fetch(`${API_BASE_URL}/expenses/${expenseId}`);
     if (!response.ok) {
       throw new Error("経費の取得に失敗しました");

@@ -37,8 +37,21 @@ export interface DashboardData {
   trend: MonthlyTrend[];
   expenseBreakdown: ExpenseBreakdown[];
   projectSales: ProjectSales[];
-  recentInvoices: any[];
-  recentExpenses: any[];
+  recentInvoices: Array<{
+    id: string;
+    customer: { name: string };
+    project: { name: string };
+    issuedAt: Date;
+    totalAmount: number;
+    status: string;
+  }>;
+  recentExpenses: Array<{
+    id: string;
+    description: string;
+    date: Date;
+    amount: number;
+    category: { name: string; color: string } | null;
+  }>;
 }
 
 export function useDashboardData(month: string) {

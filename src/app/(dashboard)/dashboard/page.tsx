@@ -31,10 +31,13 @@ const INVOICE_STATUS_LABELS: Record<string, string> = {
   PAID: "入金済",
 };
 
-const INVOICE_STATUS_COLORS: Record<string, string> = {
-  DRAFT: "gray",
-  SENT: "orange",
-  PAID: "green",
+const INVOICE_STATUS_COLORS: Record<
+  string,
+  "default" | "info" | "danger" | "success" | "warning"
+> = {
+  DRAFT: "default",
+  SENT: "warning",
+  PAID: "success",
 };
 
 export default function DashboardPage() {
@@ -230,40 +233,42 @@ export default function DashboardPage() {
           </div>
           {recentInvoices.length > 0 ? (
             <div className="space-y-3">
-              {recentInvoices.map((invoice: any) => (
-                <Link
-                  key={invoice.id}
-                  href={`/invoices/${invoice.id}`}
-                  className="block p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <p className="font-medium">{invoice.customer.name}</p>
-                      <p className="text-sm text-gray-500">
-                        {invoice.project.name}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {formatDate(invoice.issuedAt)}
-                      </p>
+              {recentInvoices.map(
+                (invoice: {
+                  id: string;
+                  customer: { name: string };
+                  project: { name: string };
+                  issuedAt: Date;
+                  totalAmount: number;
+                  status: string;
+                }) => (
+                  <Link
+                    key={invoice.id}
+                    href={`/invoices/${invoice.id}`}
+                    className="block p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-medium">{invoice.customer.name}</p>
+                        <p className="text-sm text-gray-500">
+                          {invoice.project.name}
+                        </p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          {formatDate(invoice.issuedAt)}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold">
+                          {formatCurrency(invoice.totalAmount)}
+                        </p>
+                        <Badge variant={INVOICE_STATUS_COLORS[invoice.status]}>
+                          {INVOICE_STATUS_LABELS[invoice.status]}
+                        </Badge>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-semibold">
-                        {formatCurrency(invoice.totalAmount)}
-                      </p>
-                      <Badge
-                        variant={
-                          INVOICE_STATUS_COLORS[invoice.status] as
-                            | "green"
-                            | "orange"
-                            | "gray"
-                        }
-                      >
-                        {INVOICE_STATUS_LABELS[invoice.status]}
-                      </Badge>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                )
+              )}
             </div>
           ) : (
             <p className="text-gray-500">データがありません</p>
@@ -282,36 +287,48 @@ export default function DashboardPage() {
           </div>
           {recentExpenses.length > 0 ? (
             <div className="space-y-3">
-              {recentExpenses.map((expense: any) => (
-                <Link
-                  key={expense.id}
-                  href={`/expenses/${expense.id}`}
-                  className="block p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: expense.category.color }}
-                        />
-                        <p className="font-medium">{expense.description}</p>
+              {recentExpenses.map(
+                (expense: {
+                  id: string;
+                  description: string;
+                  date: Date;
+                  amount: number;
+                  category: { name: string; color: string } | null;
+                }) => (
+                  <Link
+                    key={expense.id}
+                    href={`/expenses/${expense.id}`}
+                    className="block p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          {expense.category && (
+                            <div
+                              className="w-3 h-3 rounded-full"
+                              style={{
+                                backgroundColor: expense.category.color,
+                              }}
+                            />
+                          )}
+                          <p className="font-medium">{expense.description}</p>
+                        </div>
+                        <p className="text-sm text-gray-500">
+                          {expense.category?.name || "未分類"}
+                        </p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          {formatDate(expense.date)}
+                        </p>
                       </div>
-                      <p className="text-sm text-gray-500">
-                        {expense.category.name}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {formatDate(expense.expenseDate)}
-                      </p>
+                      <div className="text-right">
+                        <p className="font-semibold">
+                          {formatCurrency(expense.amount)}
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-semibold">
-                        {formatCurrency(expense.amount)}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                )
+              )}
             </div>
           ) : (
             <p className="text-gray-500">データがありません</p>

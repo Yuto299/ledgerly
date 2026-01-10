@@ -1,5 +1,5 @@
 import { prisma } from "../db/prisma";
-import { PaymentMethod } from "@prisma/client";
+import { PaymentMethod, Prisma } from "@prisma/client";
 
 /**
  * 経費リポジトリ
@@ -28,7 +28,7 @@ export const expenseRepository = {
       limit = 50,
     } = options;
 
-    const where: any = {
+    const where: Prisma.ExpenseWhereInput = {
       userId,
       deletedAt: null,
     };
@@ -213,7 +213,7 @@ export const expenseRepository = {
     endDate?: Date,
     projectId?: string
   ): Promise<number> {
-    const where: any = {
+    const where: Prisma.ExpenseWhereInput = {
       userId,
       deletedAt: null,
     };

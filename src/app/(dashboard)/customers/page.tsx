@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCustomers } from "@/features/customers/hooks/useCustomers";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
+import { TableSkeleton } from "@/components/atoms/Skeleton";
 import { formatDate } from "@/lib/utils";
 
 export default function CustomersPage() {
@@ -11,8 +12,14 @@ export default function CustomersPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <p className="text-gray-500">読み込み中...</p>
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">顧客管理</h1>
+          <Button disabled>+ 新規顧客</Button>
+        </div>
+        <Card>
+          <TableSkeleton rows={5} columns={6} />
+        </Card>
       </div>
     );
   }
@@ -20,7 +27,10 @@ export default function CustomersPage() {
   if (error) {
     return (
       <div className="flex justify-center items-center h-64">
-        <p className="text-red-600">エラーが発生しました: {error.message}</p>
+        <div className="text-center">
+          <p className="text-red-600 mb-2">エラーが発生しました</p>
+          <p className="text-gray-500 text-sm">{error.message}</p>
+        </div>
       </div>
     );
   }

@@ -42,7 +42,11 @@ export default function EditExpensePage({
           amount: data.expense.amount,
           categoryId: data.expense.categoryId,
           projectId: data.expense.projectId || "",
-          paymentMethod: data.expense.paymentMethod,
+          paymentMethod: data.expense.paymentMethod as
+            | "BANK_TRANSFER"
+            | "CREDIT_CARD"
+            | "CASH"
+            | "OTHER",
           description: data.expense.description || "",
           notes: data.expense.notes || "",
         }
