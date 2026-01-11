@@ -75,10 +75,9 @@ export default function SignupPage() {
         <div className="max-w-md w-full">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200 p-6 md:p-8">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">
+              <h2 className="text-2xl font-bold text-gray-900">
                 新規登録
               </h2>
-              <p className="text-sm text-gray-600">アカウントを作成</p>
             </div>
 
             {error && (

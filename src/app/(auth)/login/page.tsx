@@ -70,10 +70,9 @@ export default function LoginPage() {
         <div className="max-w-md w-full">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-gray-200 p-8 md:p-10">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              <h2 className="text-3xl font-bold text-gray-900">
                 ログイン
               </h2>
-              <p className="text-gray-600">アカウントにアクセス</p>
             </div>
 
             {error && (
