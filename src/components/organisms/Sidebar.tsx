@@ -10,6 +10,7 @@ const navigation = [
   { name: "案件", href: "/projects", icon: "📁" },
   { name: "請求書", href: "/invoices", icon: "📄" },
   { name: "経費", href: "/expenses", icon: "💳" },
+  { name: "経費カテゴリ", href: "/expense-categories", icon: "🏷️" },
   { name: "レポート", href: "/reports", icon: "📈" },
   { name: "設定", href: "/settings", icon: "⚙️" },
 ];
