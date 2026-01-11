@@ -27,8 +27,46 @@ model User {
   invoices          Invoice[]
   expenses          Expense[]
   expenseCategories ExpenseCategory[]
+  settings          UserSettings?
 
   @@map("users")
+}
+
+// ==========================================
+// ユーザー設定
+// ==========================================
+model UserSettings {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  
+  // 事業者情報
+  businessName     String?  @map("business_name")     // 屋号・事業者名
+  representativeName String? @map("representative_name") // 代表者名
+  postalCode       String?  @map("postal_code")       // 郵便番号
+  address          String?  @map("address")           // 住所
+  phone            String?  @map("phone")             // 電話番号
+  email            String?  @map("email")             // メールアドレス
+  
+  // 銀行口座情報
+  bankName         String?  @map("bank_name")         // 銀行名
+  branchName       String?  @map("branch_name")       // 支店名
+  accountType      String?  @map("account_type")      // 口座種別（普通/当座）
+  accountNumber    String?  @map("account_number")    // 口座番号
+  accountHolder    String?  @map("account_holder")    // 口座名義
+  
+  // 請求書設定
+  invoicePrefix    String?  @default("INV") @map("invoice_prefix") // 請求書番号プレフィックス
+  taxRate          Float?   @default(0.10) @map("tax_rate")        // 消費税率（デフォルト10%）
+  defaultPaymentDays Int?   @default(30) @map("default_payment_days") // デフォルト支払期限（日数）
+  invoiceNotes     String?  @map("invoice_notes")     // 請求書デフォルト備考
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_settings")
 }
 
 // ==========================================

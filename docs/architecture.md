@@ -51,7 +51,7 @@
 | `/expenses`            | 経費一覧                                                            |
 | `/expenses/new`        | 経費作成                                                            |
 | `/reports`             | レポート・分析                                                      |
-| `/settings`            | 設定（経費カテゴリ管理等）                                          |
+| `/settings`            | 設定（ユーザー設定・経費カテゴリ管理等）                            |
 
 ---
 
@@ -205,6 +205,9 @@ ledgerly/
 │   │   │   │   ├── markInvoiceSent.ts
 │   │   │   │   └── registerPayment.ts  # 入金登録・自動PAID更新
 │   │   │   ├── expenses/
+│   │   │   ├── settings/
+│   │   │   │   ├── getSettings.ts
+│   │   │   │   └── updateSettings.ts
 │   │   │   └── reports/
 │   │   │       └── getMonthlySummary.ts
 │   │   └── dto/                  # Data Transfer Objects

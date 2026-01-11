@@ -264,17 +264,27 @@ interface Invoice {
   items: InvoiceItem[];
 }
 
-interface InvoicePDFProps {
-  invoice: Invoice;
-  companyInfo?: {
-    name: string;
-    address?: string;
-    phone?: string;
-    email?: string;
-  };
+interface UserSettings {
+  businessName?: string | null;
+  representativeName?: string | null;
+  postalCode?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  bankName?: string | null;
+  branchName?: string | null;
+  accountType?: string | null;
+  accountNumber?: string | null;
+  accountHolder?: string | null;
+  invoiceNotes?: string | null;
 }
 
-export const InvoicePDF = ({ invoice, companyInfo }: InvoicePDFProps) => {
+interface InvoicePDFProps {
+  invoice: Invoice;
+  settings?: UserSettings | null;
+}
+
+export const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
   const unpaidAmount = invoice.totalAmount - invoice.paidAmount;
 
   return (
@@ -318,16 +328,24 @@ export const InvoicePDF = ({ invoice, companyInfo }: InvoicePDFProps) => {
           {/* 請求元 */}
           <View style={styles.companyBox}>
             <Text style={styles.companyName}>
-              {companyInfo?.name || "あなたの会社名"}
+              {settings?.businessName || "事業者名未設定"}
             </Text>
-            {companyInfo?.address && (
-              <Text style={styles.infoText}>{companyInfo.address}</Text>
+            {settings?.representativeName && (
+              <Text style={styles.infoText}>{settings.representativeName}</Text>
             )}
-            {companyInfo?.phone && (
-              <Text style={styles.infoText}>電話: {companyInfo.phone}</Text>
+            {settings?.postalCode && settings?.address && (
+              <Text style={styles.infoText}>
+                〒{settings.postalCode} {settings.address}
+              </Text>
             )}
-            {companyInfo?.email && (
-              <Text style={styles.infoText}>メール: {companyInfo.email}</Text>
+            {!settings?.postalCode && settings?.address && (
+              <Text style={styles.infoText}>{settings.address}</Text>
+            )}
+            {settings?.phone && (
+              <Text style={styles.infoText}>電話: {settings.phone}</Text>
+            )}
+            {settings?.email && (
+              <Text style={styles.infoText}>メール: {settings.email}</Text>
             )}
           </View>
         </View>
@@ -346,18 +364,37 @@ export const InvoicePDF = ({ invoice, companyInfo }: InvoicePDFProps) => {
             <Text style={styles.bankInfoTitle}>振込先</Text>
           </View>
           <View style={styles.bankInfoContent}>
-            <View style={styles.bankRow}>
-              <Text style={styles.bankLabel}>銀行名:</Text>
-              <Text style={styles.bankValue}>○○銀行 ○○支店</Text>
-            </View>
+            {settings?.bankName || settings?.branchName ? (
+              <View style={styles.bankRow}>
+                <Text style={styles.bankLabel}>銀行名:</Text>
+                <Text style={styles.bankValue}>
+                  {settings?.bankName || ""} {settings?.branchName || ""}
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.bankRow}>
+                <Text style={styles.bankLabel}>銀行名:</Text>
+                <Text style={styles.bankValue}>未設定</Text>
+              </View>
+            )}
             <View style={styles.bankRow}>
               <Text style={styles.bankLabel}>口座種別:</Text>
-              <Text style={styles.bankValue}>普通</Text>
+              <Text style={styles.bankValue}>
+                {settings?.accountType || "未設定"}
+              </Text>
             </View>
             <View style={styles.bankRow}>
               <Text style={styles.bankLabel}>口座番号:</Text>
-              <Text style={styles.bankValue}>1234567</Text>
+              <Text style={styles.bankValue}>
+                {settings?.accountNumber || "未設定"}
+              </Text>
             </View>
+            {settings?.accountHolder && (
+              <View style={styles.bankRow}>
+                <Text style={styles.bankLabel}>口座名義:</Text>
+                <Text style={styles.bankValue}>{settings.accountHolder}</Text>
+              </View>
+            )}
             <Text style={[styles.infoText, { marginTop: 3 }]}>
               振込手数料はお客様のご負担にてお願い致します。
             </Text>
@@ -438,8 +475,12 @@ export const InvoicePDF = ({ invoice, companyInfo }: InvoicePDFProps) => {
             <Text style={styles.notesTitleText}>備考</Text>
           </View>
           <View style={styles.notesContent}>
-            {invoice.notes ? (
-              <Text style={styles.notesText}>{invoice.notes}</Text>
+            {settings?.invoiceNotes || invoice.notes ? (
+              <Text style={styles.notesText}>
+                {settings?.invoiceNotes || ""}
+                {settings?.invoiceNotes && invoice.notes ? "\n" : ""}
+                {invoice.notes || ""}
+              </Text>
             ) : (
               <Text style={styles.notesText}> </Text>
             )}

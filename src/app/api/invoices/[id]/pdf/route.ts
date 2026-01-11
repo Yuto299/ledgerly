@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/authOptions";
 import { getInvoiceById } from "@/application/usecases/invoices/getInvoiceById";
+import { getSettings } from "@/application/usecases/settings/getSettings";
 import { renderToStream } from "@react-pdf/renderer";
 import { InvoicePDF } from "@/components/pdf/InvoicePDF";
 import React from "react";
@@ -26,6 +27,9 @@ export async function GET(
     }
 
     const { invoice } = result;
+
+    // ユーザー設定を取得
+    const settings = await getSettings(session.user.id);
 
     console.log("Invoice data for PDF:", {
       id: invoice.id,
@@ -73,11 +77,19 @@ export async function GET(
     // PDF生成
     const pdfElement = React.createElement(InvoicePDF as any, {
       invoice: pdfInvoice,
-      companyInfo: {
-        name: "あなたの会社名",
-        address: "〒000-0000 東京都〇〇区〇〇 1-2-3",
-        phone: "03-1234-5678",
-        email: "info@yourcompany.com",
+      settings: {
+        businessName: settings.businessName,
+        representativeName: settings.representativeName,
+        postalCode: settings.postalCode,
+        address: settings.address,
+        phone: settings.phone,
+        email: settings.email,
+        bankName: settings.bankName,
+        branchName: settings.branchName,
+        accountType: settings.accountType,
+        accountNumber: settings.accountNumber,
+        accountHolder: settings.accountHolder,
+        invoiceNotes: settings.invoiceNotes,
       },
     });
 

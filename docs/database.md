@@ -19,6 +19,7 @@ PostgreSQL を使用し、Prisma ORM で型安全にアクセスする。
 | テーブル名         | 説明         |
 | ------------------ | ------------ |
 | users              | ユーザー     |
+| user_settings      | ユーザー設定 |
 | customers          | 顧客         |
 | projects           | 案件         |
 | invoices           | 請求書       |
@@ -46,6 +47,38 @@ PostgreSQL を使用し、Prisma ORM で型安全にアクセスする。
 
 - PRIMARY KEY: id
 - UNIQUE: email
+
+---
+
+### 3.2 user_settings（ユーザー設定）
+
+| カラム名             | 型        | NULL | デフォルト | 説明                       |
+| -------------------- | --------- | ---- | ---------- | -------------------------- |
+| id                   | UUID      | NO   | uuid()     | 設定 ID                    |
+| user_id              | UUID      | NO   | -          | ユーザー ID                |
+| business_name        | VARCHAR   | YES  | -          | 屋号・事業者名             |
+| representative_name  | VARCHAR   | YES  | -          | 代表者名                   |
+| postal_code          | VARCHAR   | YES  | -          | 郵便番号                   |
+| address              | VARCHAR   | YES  | -          | 住所                       |
+| phone                | VARCHAR   | YES  | -          | 電話番号                   |
+| email                | VARCHAR   | YES  | -          | メールアドレス             |
+| bank_name            | VARCHAR   | YES  | -          | 銀行名                     |
+| branch_name          | VARCHAR   | YES  | -          | 支店名                     |
+| account_type         | VARCHAR   | YES  | -          | 口座種別（普通/当座）      |
+| account_number       | VARCHAR   | YES  | -          | 口座番号                   |
+| account_holder       | VARCHAR   | YES  | -          | 口座名義                   |
+| invoice_prefix       | VARCHAR   | YES  | 'INV'      | 請求書番号プレフィックス   |
+| tax_rate             | FLOAT     | YES  | 0.10       | 消費税率                   |
+| default_payment_days | INTEGER   | YES  | 30         | デフォルト支払期限（日数） |
+| invoice_notes        | TEXT      | YES  | -          | 請求書デフォルト備考       |
+| created_at           | TIMESTAMP | NO   | now()      | 作成日時                   |
+| updated_at           | TIMESTAMP | NO   | now()      | 更新日時                   |
+
+**制約**
+
+- PRIMARY KEY: id
+- UNIQUE: user_id
+- FOREIGN KEY: user_id → users.id (CASCADE)
 
 ---
 
