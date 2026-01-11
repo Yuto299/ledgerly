@@ -1,3 +1,4 @@
+import "server-only";
 import React from "react";
 import {
   Document,
@@ -7,139 +8,229 @@ import {
   StyleSheet,
   Font,
 } from "@react-pdf/renderer";
+import path from "path";
 import { formatDate } from "@/lib/utils";
 import { formatCurrency } from "@/lib/money/formatter";
 
-// フォント登録（日本語対応）
-Font.register({
-  family: "Noto Sans JP",
-  src: "https://fonts.gstatic.com/s/notosansjp/v42/-F6jfjtqLzI2JPCgQBnw7HFyzSD-AsregP8VFBEi75vY0rw-oME.ttf",
-});
+const registerJapaneseFonts = () => {
+  if (typeof window !== "undefined") return;
+
+  const globalState = globalThis as unknown as {
+    __ledgerlyPdfFontsRegistered?: boolean;
+  };
+
+  if (globalState.__ledgerlyPdfFontsRegistered) return;
+
+  const fontPath = path.join(process.cwd(), "public/fonts/NotoSansJP.ttf");
+
+  Font.register({
+    family: "NotoSansJP",
+    src: fontPath,
+  });
+
+  globalState.__ledgerlyPdfFontsRegistered = true;
+};
+
+registerJapaneseFonts();
 
 const styles = StyleSheet.create({
   page: {
     padding: 40,
-    fontFamily: "Noto Sans JP",
-    fontSize: 10,
+    fontSize: 9,
+    fontFamily: "NotoSansJP",
   },
-  header: {
-    marginBottom: 30,
+  // タイトル部分
+  titleBar: {
+    backgroundColor: "#2563eb",
+    padding: 10,
+    marginBottom: 20,
   },
-  title: {
-    fontSize: 24,
+  titleText: {
+    fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 20,
+    color: "#ffffff",
+    textAlign: "center",
   },
-  section: {
-    marginBottom: 20,
+  // ヘッダー情報（日付・番号）
+  headerInfo: {
+    position: "absolute",
+    top: 40,
+    right: 40,
+    alignItems: "flex-end",
   },
-  sectionTitle: {
+  headerRow: {
+    flexDirection: "row",
+    marginBottom: 3,
+  },
+  headerLabel: {
+    fontSize: 9,
+    marginRight: 10,
+  },
+  headerValue: {
+    fontSize: 9,
+    fontWeight: "bold",
+  },
+  // 宛先と請求元
+  infoSection: {
+    flexDirection: "row",
+    marginBottom: 15,
+    justifyContent: "space-between",
+  },
+  recipientBox: {
+    width: "48%",
+  },
+  companyBox: {
+    width: "48%",
+    alignItems: "flex-end",
+  },
+  recipientName: {
     fontSize: 12,
     fontWeight: "bold",
-    marginBottom: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: "#4f46e5",
-    paddingBottom: 5,
-  },
-  row: {
-    flexDirection: "row",
     marginBottom: 5,
   },
-  label: {
-    width: 100,
+  companyName: {
+    fontSize: 11,
+    fontWeight: "bold",
+    marginBottom: 3,
+  },
+  infoText: {
+    fontSize: 8,
+    marginBottom: 2,
+  },
+  // 請求金額セクション
+  totalAmountBox: {
+    backgroundColor: "#2563eb",
+    padding: 8,
+    marginBottom: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  totalAmountLabel: {
+    fontSize: 11,
+    color: "#ffffff",
     fontWeight: "bold",
   },
-  value: {
-    flex: 1,
+  totalAmountValue: {
+    fontSize: 16,
+    color: "#ffffff",
+    fontWeight: "bold",
   },
+  // 振込先情報
+  bankInfoBox: {
+    backgroundColor: "#2563eb",
+    padding: 6,
+    marginBottom: 5,
+  },
+  bankInfoTitle: {
+    fontSize: 10,
+    color: "#ffffff",
+    fontWeight: "bold",
+  },
+  bankInfoContent: {
+    borderWidth: 1,
+    borderColor: "#cbd5e1",
+    padding: 8,
+    marginBottom: 15,
+  },
+  bankRow: {
+    flexDirection: "row",
+    marginBottom: 2,
+  },
+  bankLabel: {
+    width: 60,
+    fontSize: 8,
+  },
+  bankValue: {
+    fontSize: 8,
+  },
+  // テーブル
   table: {
-    marginTop: 10,
+    marginBottom: 10,
   },
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: "#f3f4f6",
-    padding: 8,
+    backgroundColor: "#dbeafe",
+    padding: 5,
     fontWeight: "bold",
-    borderBottomWidth: 1,
-    borderBottomColor: "#d1d5db",
+    fontSize: 8,
+    borderWidth: 1,
+    borderColor: "#93c5fd",
   },
   tableRow: {
     flexDirection: "row",
-    padding: 8,
+    padding: 5,
+    fontSize: 8,
     borderBottomWidth: 1,
-    borderBottomColor: "#e5e7eb",
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: "#cbd5e1",
   },
-  tableCol1: {
+  colItem: {
     width: "40%",
   },
-  tableCol2: {
-    width: "15%",
+  colQty: {
+    width: "12%",
+    textAlign: "center",
+  },
+  colUnit: {
+    width: "18%",
     textAlign: "right",
   },
-  tableCol3: {
-    width: "15%",
+  colAmount: {
+    width: "18%",
     textAlign: "right",
   },
-  tableCol4: {
-    width: "15%",
-    textAlign: "right",
-  },
-  tableCol5: {
-    width: "15%",
-    textAlign: "right",
-  },
-  totalSection: {
-    marginTop: 20,
-    alignItems: "flex-end",
-  },
-  totalRow: {
+  // 合計セクション
+  summarySection: {
     flexDirection: "row",
-    marginBottom: 8,
-    width: 250,
+    justifyContent: "flex-end",
   },
-  totalLabel: {
-    flex: 1,
-    fontSize: 11,
-    fontWeight: "bold",
+  summaryBox: {
+    width: 180,
   },
-  totalValue: {
-    width: 100,
-    textAlign: "right",
-    fontSize: 11,
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 5,
+    borderBottomWidth: 1,
+    borderColor: "#cbd5e1",
   },
-  grandTotal: {
-    fontSize: 14,
-    fontWeight: "bold",
-    borderTopWidth: 2,
-    borderTopColor: "#4f46e5",
-    paddingTop: 8,
-  },
-  footer: {
-    marginTop: 40,
-    paddingTop: 20,
-    borderTopWidth: 1,
-    borderTopColor: "#e5e7eb",
+  summaryLabel: {
     fontSize: 9,
-    color: "#6b7280",
-  },
-  statusBadge: {
-    alignSelf: "flex-start",
-    padding: "4px 8px",
-    borderRadius: 4,
-    fontSize: 10,
     fontWeight: "bold",
   },
-  statusDraft: {
+  summaryValue: {
+    fontSize: 9,
+    textAlign: "right",
+  },
+  summaryTotal: {
     backgroundColor: "#dbeafe",
-    color: "#1e40af",
+    borderWidth: 1,
+    borderColor: "#2563eb",
   },
-  statusSent: {
-    backgroundColor: "#fef3c7",
-    color: "#92400e",
+  // 備考
+  notesBox: {
+    marginTop: 15,
   },
-  statusPaid: {
-    backgroundColor: "#d1fae5",
-    color: "#065f46",
+  notesTitle: {
+    backgroundColor: "#2563eb",
+    padding: 6,
+    marginBottom: 5,
+  },
+  notesTitleText: {
+    fontSize: 10,
+    color: "#ffffff",
+    fontWeight: "bold",
+  },
+  notesContent: {
+    borderWidth: 1,
+    borderColor: "#cbd5e1",
+    padding: 8,
+    minHeight: 40,
+  },
+  notesText: {
+    fontSize: 8,
   },
 });
 
@@ -183,184 +274,176 @@ interface InvoicePDFProps {
   };
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  DRAFT: "下書き",
-  SENT: "請求済",
-  PAID: "入金済",
-};
-
 export const InvoicePDF = ({ invoice, companyInfo }: InvoicePDFProps) => {
   const unpaidAmount = invoice.totalAmount - invoice.paidAmount;
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* ヘッダー */}
-        <View style={styles.header}>
-          <Text style={styles.title}>請求書</Text>
-          <View
-            style={[
-              styles.statusBadge,
-              invoice.status === "DRAFT"
-                ? styles.statusDraft
-                : invoice.status === "SENT"
-                ? styles.statusSent
-                : styles.statusPaid,
-            ]}
-          >
-            <Text>{STATUS_LABELS[invoice.status] || invoice.status}</Text>
-          </View>
+        {/* タイトルバー */}
+        <View style={styles.titleBar}>
+          <Text style={styles.titleText}>請求書</Text>
         </View>
 
-        {/* 請求書情報 */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>請求書情報</Text>
-          <View style={styles.row}>
-            <Text style={styles.label}>請求書番号:</Text>
-            <Text style={styles.value}>
-              {invoice.invoiceNumber || "未発行"}
+        {/* 右上の日付・番号情報 */}
+        <View style={styles.headerInfo}>
+          <View style={styles.headerRow}>
+            <Text style={styles.headerLabel}>発行日</Text>
+            <Text style={styles.headerValue}>
+              {formatDate(invoice.issuedAt)}
             </Text>
           </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>発行日:</Text>
-            <Text style={styles.value}>{formatDate(invoice.issuedAt)}</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.headerLabel}>請求番号</Text>
+            <Text style={styles.headerValue}>
+              {invoice.invoiceNumber || "000001"}
+            </Text>
           </View>
-          <View style={styles.row}>
-            <Text style={styles.label}>支払期限:</Text>
-            <Text style={styles.value}>{formatDate(invoice.dueAt)}</Text>
-          </View>
-          {invoice.project && (
-            <View style={styles.row}>
-              <Text style={styles.label}>案件:</Text>
-              <Text style={styles.value}>{invoice.project.name}</Text>
-            </View>
-          )}
         </View>
 
-        {/* 請求先 */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>請求先</Text>
-          <View style={styles.row}>
-            <Text style={styles.label}>顧客名:</Text>
-            <Text style={styles.value}>{invoice.customer.name}</Text>
+        {/* 宛先と請求元 */}
+        <View style={styles.infoSection}>
+          {/* 宛先 */}
+          <View style={styles.recipientBox}>
+            <Text style={styles.recipientName}>
+              {invoice.customer.name} 御中
+            </Text>
+            {invoice.customer.contactName && (
+              <Text style={styles.infoText}>
+                {invoice.customer.contactName}
+              </Text>
+            )}
           </View>
-          {invoice.customer.contactName && (
-            <View style={styles.row}>
-              <Text style={styles.label}>担当者:</Text>
-              <Text style={styles.value}>{invoice.customer.contactName}</Text>
-            </View>
-          )}
-          {invoice.customer.email && (
-            <View style={styles.row}>
-              <Text style={styles.label}>メール:</Text>
-              <Text style={styles.value}>{invoice.customer.email}</Text>
-            </View>
-          )}
-          {invoice.customer.phone && (
-            <View style={styles.row}>
-              <Text style={styles.label}>電話:</Text>
-              <Text style={styles.value}>{invoice.customer.phone}</Text>
-            </View>
-          )}
+
+          {/* 請求元 */}
+          <View style={styles.companyBox}>
+            <Text style={styles.companyName}>
+              {companyInfo?.name || "あなたの会社名"}
+            </Text>
+            {companyInfo?.address && (
+              <Text style={styles.infoText}>{companyInfo.address}</Text>
+            )}
+            {companyInfo?.phone && (
+              <Text style={styles.infoText}>電話: {companyInfo.phone}</Text>
+            )}
+            {companyInfo?.email && (
+              <Text style={styles.infoText}>メール: {companyInfo.email}</Text>
+            )}
+          </View>
         </View>
 
-        {/* 請求元（会社情報） */}
-        {companyInfo && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>請求元</Text>
-            <View style={styles.row}>
-              <Text style={styles.label}>会社名:</Text>
-              <Text style={styles.value}>{companyInfo.name}</Text>
-            </View>
-            {companyInfo.address && (
-              <View style={styles.row}>
-                <Text style={styles.label}>住所:</Text>
-                <Text style={styles.value}>{companyInfo.address}</Text>
-              </View>
-            )}
-            {companyInfo.phone && (
-              <View style={styles.row}>
-                <Text style={styles.label}>電話:</Text>
-                <Text style={styles.value}>{companyInfo.phone}</Text>
-              </View>
-            )}
-            {companyInfo.email && (
-              <View style={styles.row}>
-                <Text style={styles.label}>メール:</Text>
-                <Text style={styles.value}>{companyInfo.email}</Text>
-              </View>
-            )}
+        {/* 請求金額ボックス */}
+        <View style={styles.totalAmountBox}>
+          <Text style={styles.totalAmountLabel}>ご請求金額（税込）</Text>
+          <Text style={styles.totalAmountValue}>
+            {formatCurrency(invoice.totalAmount)}
+          </Text>
+        </View>
+
+        {/* 振込先情報 */}
+        <View>
+          <View style={styles.bankInfoBox}>
+            <Text style={styles.bankInfoTitle}>振込先</Text>
           </View>
-        )}
+          <View style={styles.bankInfoContent}>
+            <View style={styles.bankRow}>
+              <Text style={styles.bankLabel}>銀行名:</Text>
+              <Text style={styles.bankValue}>○○銀行 ○○支店</Text>
+            </View>
+            <View style={styles.bankRow}>
+              <Text style={styles.bankLabel}>口座種別:</Text>
+              <Text style={styles.bankValue}>普通</Text>
+            </View>
+            <View style={styles.bankRow}>
+              <Text style={styles.bankLabel}>口座番号:</Text>
+              <Text style={styles.bankValue}>1234567</Text>
+            </View>
+            <Text style={[styles.infoText, { marginTop: 3 }]}>
+              振込手数料はお客様のご負担にてお願い致します。
+            </Text>
+          </View>
+        </View>
 
         {/* 明細テーブル */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>明細</Text>
-          <View style={styles.table}>
-            {/* テーブルヘッダー */}
-            <View style={styles.tableHeader}>
-              <Text style={styles.tableCol1}>品名</Text>
-              <Text style={styles.tableCol2}>数量</Text>
-              <Text style={styles.tableCol3}>単価</Text>
-              <Text style={styles.tableCol4}>金額</Text>
-            </View>
-            {/* テーブル行 */}
-            {invoice.items.map((item) => (
-              <View key={item.id} style={styles.tableRow}>
-                <View style={styles.tableCol1}>
-                  <Text>{item.name}</Text>
-                  {item.description && (
-                    <Text style={{ fontSize: 8, color: "#6b7280" }}>
-                      {item.description}
-                    </Text>
-                  )}
-                </View>
-                <Text style={styles.tableCol2}>{item.quantity}</Text>
-                <Text style={styles.tableCol3}>
-                  {formatCurrency(item.unitPrice)}
-                </Text>
-                <Text style={styles.tableCol4}>
-                  {formatCurrency(item.amount)}
-                </Text>
-              </View>
-            ))}
+        <View style={styles.table}>
+          {/* ヘッダー */}
+          <View style={styles.tableHeader}>
+            <Text style={styles.colItem}>品名</Text>
+            <Text style={styles.colQty}>数量</Text>
+            <Text style={styles.colUnit}>単価</Text>
+            <Text style={styles.colAmount}>金額</Text>
           </View>
+
+          {/* データ行 */}
+          {invoice.items.map((item) => (
+            <View key={item.id} style={styles.tableRow}>
+              <View style={styles.colItem}>
+                <Text>{item.name}</Text>
+                {item.description && (
+                  <Text style={{ fontSize: 7, color: "#6b7280" }}>
+                    {item.description}
+                  </Text>
+                )}
+              </View>
+              <Text style={styles.colQty}>{item.quantity}</Text>
+              <Text style={styles.colUnit}>
+                {formatCurrency(item.unitPrice)}
+              </Text>
+              <Text style={styles.colAmount}>
+                {formatCurrency(item.amount)}
+              </Text>
+            </View>
+          ))}
+
+          {/* 空行 */}
+          {Array.from({ length: Math.max(0, 10 - invoice.items.length) }).map(
+            (_, index) => (
+              <View key={`empty-${index}`} style={styles.tableRow}>
+                <Text style={styles.colItem}> </Text>
+                <Text style={styles.colQty}> </Text>
+                <Text style={styles.colUnit}> </Text>
+                <Text style={styles.colAmount}> </Text>
+              </View>
+            )
+          )}
         </View>
 
-        {/* 合計 */}
-        <View style={styles.totalSection}>
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>小計:</Text>
-            <Text style={styles.totalValue}>
-              {formatCurrency(invoice.totalAmount)}
-            </Text>
-          </View>
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>入金済:</Text>
-            <Text style={styles.totalValue}>
-              {formatCurrency(invoice.paidAmount)}
-            </Text>
-          </View>
-          <View style={[styles.totalRow, styles.grandTotal]}>
-            <Text style={styles.totalLabel}>未払金額:</Text>
-            <Text style={styles.totalValue}>
-              {formatCurrency(unpaidAmount)}
-            </Text>
+        {/* 合計セクション */}
+        <View style={styles.summarySection}>
+          <View style={styles.summaryBox}>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>小計</Text>
+              <Text style={styles.summaryValue}>
+                {formatCurrency(invoice.totalAmount)}
+              </Text>
+            </View>
+            <View style={styles.summaryRow}>
+              <Text style={styles.summaryLabel}>入金済</Text>
+              <Text style={styles.summaryValue}>
+                {formatCurrency(invoice.paidAmount)}
+              </Text>
+            </View>
+            <View style={[styles.summaryRow, styles.summaryTotal]}>
+              <Text style={styles.summaryLabel}>合計</Text>
+              <Text style={styles.summaryValue}>
+                {formatCurrency(unpaidAmount)}
+              </Text>
+            </View>
           </View>
         </View>
 
         {/* 備考 */}
-        {invoice.notes && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>備考</Text>
-            <Text>{invoice.notes}</Text>
+        <View style={styles.notesBox}>
+          <View style={styles.notesTitle}>
+            <Text style={styles.notesTitleText}>備考</Text>
           </View>
-        )}
-
-        {/* フッター */}
-        <View style={styles.footer}>
-          <Text>Ledgerly - 副業・個人事業向け売上・経費管理システム</Text>
-          <Text>発行日: {formatDate(new Date())}</Text>
+          <View style={styles.notesContent}>
+            {invoice.notes ? (
+              <Text style={styles.notesText}>{invoice.notes}</Text>
+            ) : (
+              <Text style={styles.notesText}> </Text>
+            )}
+          </View>
         </View>
       </Page>
     </Document>

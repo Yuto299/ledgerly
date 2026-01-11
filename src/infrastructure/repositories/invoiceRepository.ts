@@ -91,6 +91,9 @@ export class InvoiceRepository {
           select: {
             id: true,
             name: true,
+            email: true,
+            phone: true,
+            contactName: true,
           },
         },
         project: {

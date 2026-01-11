@@ -12,15 +12,15 @@ export default function Header() {
           {/* スペーサー（モバイルメニューボタンの分） */}
         </div>
         <div className="flex-1">{/* 検索バーなど（将来追加） */}</div>
-        <div className="flex items-center space-x-2 md:space-x-4">
+        <div className="flex items-center space-x-3 md:space-x-6">
           {session?.user && (
             <>
-              <span className="text-xs md:text-sm text-gray-700 truncate max-w-[150px] md:max-w-none">
-                {session.user.email}
+              <span className="text-sm md:text-base text-gray-800 font-medium">
+                {session.user.name}さん、ようこそ
               </span>
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="text-xs md:text-sm text-gray-700 hover:text-gray-900 px-2 md:px-3 py-1.5 md:py-2 rounded hover:bg-gray-100 whitespace-nowrap"
+                className="text-sm text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 whitespace-nowrap transition-colors"
               >
                 ログアウト
               </button>

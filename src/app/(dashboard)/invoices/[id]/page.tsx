@@ -2,7 +2,6 @@
 
 import { use, useState } from "react";
 import Link from "next/link";
-import { pdf } from "@react-pdf/renderer";
 import {
   useInvoice,
   useDeleteInvoice,
@@ -18,7 +17,6 @@ import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
 import { Modal } from "@/components/molecules/Modal";
 import { PaymentForm } from "@/features/payments/components/PaymentForm";
-import { InvoicePDF } from "@/components/pdf/InvoicePDF";
 import { formatDate } from "@/lib/utils";
 import { formatCurrency } from "@/lib/money/formatter";
 import { CreatePaymentDto } from "@/features/payments/schemas/paymentSchema";
@@ -71,25 +69,14 @@ export default function InvoiceDetailPage({
 
     setIsDownloadingPDF(true);
     try {
-      // PDFを生成
-      const blob = await pdf(
-        <InvoicePDF
-          invoice={{
-            ...invoice,
-            items: items.map((item) => ({
-              ...item,
-              name: item.description,
-              description: null,
-            })),
-          }}
-          companyInfo={{
-            name: "あなたの会社名",
-            address: "〒000-0000 東京都〇〇区〇〇 1-2-3",
-            phone: "03-1234-5678",
-            email: "info@yourcompany.com",
-          }}
-        />
-      ).toBlob();
+      // APIからPDFを取得
+      const response = await fetch(`/api/invoices/${invoice.id}/pdf`);
+
+      if (!response.ok) {
+        throw new Error("PDF generation failed");
+      }
+
+      const blob = await response.blob();
 
       // ダウンロード
       const url = URL.createObjectURL(blob);
