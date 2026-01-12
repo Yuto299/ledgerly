@@ -112,7 +112,7 @@ export default function SignupPage() {
                   onChange={(e) => setName(e.target.value)}
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white/50 backdrop-blur-sm"
-                  placeholder="山田太郎"
+                  placeholder="タロウ"
                 />
               </div>
 
@@ -147,9 +147,9 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={6}
+                  minLength={8}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white/50 backdrop-blur-sm"
-                  placeholder="6文字以上"
+                  placeholder="8文字以上で入力してください"
                 />
               </div>
 

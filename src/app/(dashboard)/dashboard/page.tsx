@@ -337,47 +337,58 @@ export default function DashboardPage() {
           案件別売上ランキング
         </h2>
         {projectSales.length > 0 ? (
-          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-            <ResponsiveContainer width="100%" height={350} minWidth={500}>
+          <div className="w-full" style={{ height: 450 }}>
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={projectSales.slice(0, 10)}
-                margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+                data={projectSales.slice(0, 5)}
+                margin={{ top: 20, right: 30, left: 10, bottom: 40 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                 <XAxis
                   dataKey="projectName"
-                  angle={-30}
-                  textAnchor="end"
+                  angle={0}
+                  textAnchor="middle"
                   height={80}
                   interval={0}
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 14 }}
+                  style={{ fontWeight: 500 }}
                 />
                 <YAxis
                   tickFormatter={(value) => `¥${(value / 1000).toFixed(0)}k`}
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 13 }}
+                  width={70}
+                  domain={[0, (dataMax: number) => Math.ceil(dataMax * 1.2)]}
                 />
                 <Tooltip
                   formatter={(value: number) => formatCurrency(value)}
                   labelStyle={{ fontSize: 14, fontWeight: "bold" }}
+                  contentStyle={{ fontSize: 13 }}
                 />
-                <Legend wrapperStyle={{ paddingTop: "10px" }} />
+                <Legend
+                  verticalAlign="bottom"
+                  height={36}
+                  iconType="rect"
+                  iconSize={12}
+                />
                 <Bar
                   dataKey="totalBilled"
                   fill="#3b82f6"
                   name="請求額"
-                  radius={[4, 4, 0, 0]}
+                  radius={[6, 6, 0, 0]}
+                  barSize={60}
                 />
                 <Bar
                   dataKey="totalPaid"
                   fill="#10b981"
                   name="入金額"
-                  radius={[4, 4, 0, 0]}
+                  radius={[6, 6, 0, 0]}
+                  barSize={60}
                 />
               </BarChart>
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="h-[300px] flex items-center justify-center text-gray-500">
+          <div className="h-[400px] flex items-center justify-center text-gray-500">
             データがありません
           </div>
         )}
