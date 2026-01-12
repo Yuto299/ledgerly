@@ -4,7 +4,13 @@ import { z } from "zod";
  * 経費作成スキーマ
  */
 export const createExpenseSchema = z.object({
-  projectId: z.string().uuid().optional(),
+  projectId: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (!val || val === "") return undefined;
+      return val;
+    }),
   categoryId: z.string().uuid({ message: "カテゴリを選択してください" }),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: "有効な日付を入力してください",
@@ -40,6 +46,7 @@ export const expenseResponseSchema = z.object({
     .object({
       id: z.string().uuid(),
       name: z.string(),
+      customerId: z.string().uuid(),
     })
     .nullable()
     .optional(),

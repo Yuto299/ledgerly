@@ -59,6 +59,7 @@ export const expenseRepository = {
             select: {
               id: true,
               name: true,
+              customerId: true,
             },
           },
           category: {
@@ -94,6 +95,7 @@ export const expenseRepository = {
           select: {
             id: true,
             name: true,
+            customerId: true,
           },
         },
         category: {
@@ -136,6 +138,7 @@ export const expenseRepository = {
           select: {
             id: true,
             name: true,
+            customerId: true,
           },
         },
         category: {
@@ -176,6 +179,7 @@ export const expenseRepository = {
           select: {
             id: true,
             name: true,
+            customerId: true,
           },
         },
         category: {

@@ -4,12 +4,14 @@ import { use } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useEffect } from "react";
 import {
   useExpense,
   useUpdateExpense,
 } from "@/features/expenses/hooks/useExpenses";
 import { useExpenseCategories } from "@/features/expense-categories/hooks/useExpenseCategories";
 import { useProjects } from "@/features/projects/hooks/useProjects";
+import { useCustomers } from "@/features/customers/hooks/useCustomers";
 import {
   UpdateExpenseDto,
   updateExpenseSchema,
@@ -29,10 +31,25 @@ export default function EditExpensePage({
   const { mutate: updateExpense, isPending } = useUpdateExpense();
   const { data: categoriesData } = useExpenseCategories();
   const { data: projectsData } = useProjects({ limit: 100 });
+  const { data: customersData } = useCustomers({ limit: 100 });
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string>("");
+
+  const categories = categoriesData?.categories || [];
+  const projects = projectsData?.projects || [];
+  const customers = customersData?.customers || [];
+
+  // 既存の案件から顧客IDを取得して初期値として設定
+  useEffect(() => {
+    if (data?.expense?.project?.customerId) {
+      setSelectedCustomerId(data.expense.project.customerId);
+    }
+  }, [data]);
 
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<UpdateExpenseDto>({
     resolver: zodResolver(updateExpenseSchema),
@@ -53,18 +70,45 @@ export default function EditExpensePage({
       : undefined,
   });
 
+  // 既存のprojectIdがプロジェクトリストに存在するか確認
+  useEffect(() => {
+    if (data?.expense?.projectId && projects.length > 0) {
+      const projectExists = projects.some(
+        (p) => p.id === data.expense.projectId
+      );
+      if (!projectExists) {
+        // プロジェクトが存在しない場合は空文字列に設定
+        setValue("projectId", "");
+        setSelectedCustomerId("");
+      }
+    }
+  }, [data, projects, setValue]);
+
   const onSubmit = (updateData: UpdateExpenseDto) => {
+    console.log("Form submitted:", updateData);
+    const submitData = {
+      ...updateData,
+      projectId:
+        updateData.projectId && updateData.projectId !== ""
+          ? updateData.projectId
+          : undefined,
+    };
+    console.log("Sending to API:", submitData);
+
     updateExpense(
       {
         expenseId: id,
-        data: {
-          ...updateData,
-          projectId: updateData.projectId || undefined,
-        },
+        data: submitData,
       },
       {
         onSuccess: () => {
-          router.push(`/expenses/${id}`);
+          console.log("Update successful");
+          router.push("/expenses");
+          router.refresh();
+        },
+        onError: (error) => {
+          console.error("Update failed:", error);
+          alert(`更新に失敗しました: ${error.message}`);
         },
       }
     );
@@ -86,8 +130,10 @@ export default function EditExpensePage({
     );
   }
 
-  const categories = categoriesData?.categories || [];
-  const projects = projectsData?.projects || [];
+  // 選択された顧客の案件のみフィルタリング
+  const filteredProjects = selectedCustomerId
+    ? projects.filter((p) => p.customerId === selectedCustomerId)
+    : projects;
 
   return (
     <div>
@@ -170,16 +216,41 @@ export default function EditExpensePage({
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="projectId">案件（任意）</Label>
+            <Label htmlFor="customerId">顧客（任意）</Label>
             <select
-              id="projectId"
-              {...register("projectId", {
-                setValueAs: (v) => (v === "" ? undefined : v),
-              })}
+              id="customerId"
+              value={selectedCustomerId}
+              onChange={(e) => {
+                setSelectedCustomerId(e.target.value);
+                // 顧客変更時に案件をクリア
+                if (e.target.value !== data?.expense?.project?.customerId) {
+                  setValue("projectId", "");
+                }
+              }}
               className="w-full rounded-md border border-gray-300 px-3 py-2"
             >
               <option value="">なし</option>
-              {projects.map((project) => (
+              {customers.map((customer) => (
+                <option key={customer.id} value={customer.id}>
+                  {customer.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="projectId">案件（任意）</Label>
+            <select
+              id="projectId"
+              {...register("projectId")}
+              className="w-full rounded-md border border-gray-300 px-3 py-2"
+            >
+              <option value="">
+                {selectedCustomerId
+                  ? "なし"
+                  : "顧客を選択すると案件を絞り込みます"}
+              </option>
+              {filteredProjects.map((project) => (
                 <option key={project.id} value={project.id}>
                   {project.name}
                 </option>
@@ -223,7 +294,7 @@ export default function EditExpensePage({
             <Button
               type="button"
               variant="outline"
-              onClick={() => router.push(`/expenses/${id}`)}
+              onClick={() => router.push("/expenses")}
             >
               キャンセル
             </Button>

@@ -46,7 +46,7 @@ export default function NewExpensePage() {
     setValue("projectId", undefined);
   }, [selectedCustomerId, setValue]);
 
-  const onSubmit = (data: CreateExpenseDto) {
+  const onSubmit = (data: CreateExpenseDto) => {
     createExpense(data, {
       onSuccess: () => {
         router.push("/expenses");

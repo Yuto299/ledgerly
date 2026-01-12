@@ -54,7 +54,7 @@ export const expenseApi = {
       paymentMethod: string;
       notes: string | null;
       category: { name: string; color: string } | null;
-      project: { id: string; name: string } | null;
+      project: { id: string; name: string; customerId: string } | null;
       createdAt: Date;
       updatedAt: Date;
     };
