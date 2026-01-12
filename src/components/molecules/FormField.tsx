@@ -1,12 +1,14 @@
 import { cn } from "@/lib/utils";
 import Input, { InputProps } from "../atoms/Input";
 import Label from "../atoms/Label";
+import { ReactNode } from "react";
 
 interface FormFieldProps extends Omit<InputProps, "error"> {
   label: string;
   error?: string;
   required?: boolean;
   helperText?: string;
+  children?: ReactNode;
 }
 
 export default function FormField({
@@ -15,6 +17,7 @@ export default function FormField({
   required,
   helperText,
   id,
+  children,
   ...inputProps
 }: FormFieldProps) {
   const fieldId = id || label.toLowerCase().replace(/\s+/g, "-");
@@ -24,7 +27,11 @@ export default function FormField({
       <Label htmlFor={fieldId} required={required}>
         {label}
       </Label>
-      <Input id={fieldId} error={!!error} {...inputProps} />
+      {children ? (
+        children
+      ) : (
+        <Input id={fieldId} error={!!error} {...inputProps} />
+      )}
       {error && <p className="text-sm text-red-600">{error}</p>}
       {helperText && !error && (
         <p className="text-sm text-gray-500">{helperText}</p>
