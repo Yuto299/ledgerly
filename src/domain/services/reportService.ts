@@ -60,12 +60,12 @@ export class ReportService {
     });
     const revenue = payments.reduce((sum, p) => sum + p.amount, 0);
 
-    // 請求額（請求ベース）：当月に発行された請求書の合計
+    // 請求額（請求ベース）：当月が支払期限の請求書の合計
     const invoices = await prisma.invoice.findMany({
       where: {
         userId,
         deletedAt: null,
-        issuedAt: {
+        dueAt: {
           gte: startDate,
           lte: endDate,
         },
@@ -249,7 +249,7 @@ export class ReportService {
         deletedAt: null,
         ...(startDate &&
           endDate && {
-            issuedAt: {
+            dueAt: {
               gte: startDate,
               lte: endDate,
             },

@@ -120,8 +120,13 @@ export default function InvoiceForm({
       return sum + (item.quantity || 0) * (item.unitPrice || 0);
     }, 0) || 0;
 
+  const handleFormSubmit = (data: CreateInvoiceDto) => {
+    console.log("InvoiceForm submitting data:", JSON.stringify(data, null, 2));
+    onSubmit(data);
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
       <div>
         <label
           htmlFor="customerId"
@@ -308,8 +313,7 @@ export default function InvoiceForm({
                     placeholder="稼働時間（時間・オプション）"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                     {...register(`items.${index}.hours`, {
-                      setValueAs: (v) =>
-                        v === "" || isNaN(v) ? undefined : Number(v),
+                      valueAsNumber: true,
                     })}
                   />
                   {errors.items?.[index]?.hours && (

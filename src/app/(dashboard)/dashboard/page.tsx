@@ -343,8 +343,8 @@ export default function DashboardPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                 <XAxis
                   dataKey="projectName"
-                  angle={-45}
-                  textAnchor="end"
+                  angle={0}
+                  textAnchor="middle"
                   height={100}
                   interval={0}
                   tick={{ fontSize: 12 }}

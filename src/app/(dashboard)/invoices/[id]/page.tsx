@@ -278,6 +278,9 @@ export default function InvoiceDetailPage({
                   数量
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  稼働時間
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   単価
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -295,6 +298,9 @@ export default function InvoiceDetailPage({
                     {item.quantity}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-900 text-right">
+                    {item.hours ? `${item.hours}時間` : "-"}
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-900 text-right">
                     {formatCurrency(item.unitPrice)}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-900 text-right font-medium">
@@ -304,7 +310,7 @@ export default function InvoiceDetailPage({
               ))}
               <tr className="bg-gray-50">
                 <td
-                  colSpan={3}
+                  colSpan={4}
                   className="px-6 py-4 text-sm font-bold text-gray-900 text-right"
                 >
                   合計

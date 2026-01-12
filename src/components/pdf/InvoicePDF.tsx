@@ -251,6 +251,7 @@ interface InvoiceItem {
   quantity: number;
   unitPrice: number;
   amount: number;
+  hours?: number | null;
 }
 
 interface Invoice {
@@ -416,6 +417,7 @@ export const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
           <View style={styles.tableHeader}>
             <Text style={[styles.colItem, styles.tableHeaderText]}>品名</Text>
             <Text style={[styles.colQty, styles.tableHeaderText]}>数量</Text>
+            <Text style={[styles.colQty, styles.tableHeaderText]}>時間</Text>
             <Text style={[styles.colUnit, styles.tableHeaderText]}>単価</Text>
             <Text style={[styles.colAmount, styles.tableHeaderText]}>金額</Text>
           </View>
@@ -427,6 +429,9 @@ export const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
                 <Text style={{ fontWeight: "bold" }}>{item.name}</Text>
               </View>
               <Text style={styles.colQty}>{item.quantity}</Text>
+              <Text style={styles.colQty}>
+                {item.hours ? `${item.hours}h` : "-"}
+              </Text>
               <Text style={styles.colUnit}>
                 {formatCurrency(item.unitPrice)}
               </Text>
@@ -441,6 +446,7 @@ export const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
             (_, index) => (
               <View key={`empty-${index}`} style={styles.tableRow}>
                 <Text style={styles.colItem}> </Text>
+                <Text style={styles.colQty}> </Text>
                 <Text style={styles.colQty}> </Text>
                 <Text style={styles.colUnit}> </Text>
                 <Text style={styles.colAmount}> </Text>

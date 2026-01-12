@@ -135,6 +135,7 @@ export class InvoiceRepository {
       quantity: number;
       unitPrice: number;
       amount: number;
+      hours?: number;
       sortOrder: number;
     }>;
   }) {

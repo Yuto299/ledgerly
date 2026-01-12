@@ -9,8 +9,15 @@ import { generateInvoiceNumber } from "@/lib/invoice/invoiceNumberGenerator";
  * 請求書作成ユースケース
  */
 export async function createInvoice(userId: string, data: CreateInvoiceDto) {
+  console.log("createInvoice received data:", JSON.stringify(data, null, 2));
+
   // バリデーション
   const validatedData = createInvoiceSchema.parse(data);
+
+  console.log(
+    "createInvoice validated data:",
+    JSON.stringify(validatedData, null, 2)
+  );
 
   // 請求書番号を自動生成（入力されていない場合）
   const invoiceNumber =
@@ -36,11 +43,13 @@ export async function createInvoice(userId: string, data: CreateInvoiceDto) {
       description: item.description,
       quantity: item.quantity,
       unitPrice: item.unitPrice,
-      hours: item.hours,
+      hours: item.hours ?? undefined,
       amount,
       sortOrder: index,
     };
   });
+
+  console.log("Creating invoice with items:", JSON.stringify(items, null, 2));
 
   // 請求書作成
   const invoice = await invoiceRepository.create({
