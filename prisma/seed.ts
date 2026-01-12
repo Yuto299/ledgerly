@@ -73,6 +73,35 @@ async function main() {
     },
   });
 
+  const customer3 = await prisma.customer.create({
+    data: {
+      userId: user.id,
+      name: "合同会社デザインワークス",
+      contactName: "田中一郎",
+      email: "tanaka@design-works.co.jp",
+      phone: "03-5555-1234",
+    },
+  });
+
+  const customer4 = await prisma.customer.create({
+    data: {
+      userId: user.id,
+      name: "株式会社アプリケーションズ",
+      contactName: "鈴木美咲",
+      email: "suzuki@applications.com",
+    },
+  });
+
+  const customer5 = await prisma.customer.create({
+    data: {
+      userId: user.id,
+      name: "エンタープライズ株式会社",
+      contactName: "高橋健太",
+      email: "takahashi@enterprise.co.jp",
+      phone: "03-9876-5432",
+    },
+  });
+
   console.log("✅ Customers created");
 
   // 案件作成
@@ -99,6 +128,45 @@ async function main() {
       contractAmount: 100000,
       startDate: new Date("2026-01-01"),
       status: "IN_PROGRESS",
+    },
+  });
+
+  const project3 = await prisma.project.create({
+    data: {
+      userId: user.id,
+      customerId: customer3.id,
+      name: "リニューアル",
+      description: "ECサイトのリニューアルプロジェクト",
+      contractType: "FIXED",
+      contractAmount: 800000,
+      startDate: new Date("2025-12-01"),
+      status: "IN_PROGRESS",
+    },
+  });
+
+  const project4 = await prisma.project.create({
+    data: {
+      userId: user.id,
+      customerId: customer4.id,
+      name: "モバイルアプリ開発",
+      description: "iOS/Androidアプリの新規開発",
+      contractType: "FIXED",
+      contractAmount: 1200000,
+      startDate: new Date("2025-11-01"),
+      status: "IN_PROGRESS",
+    },
+  });
+
+  const project5 = await prisma.project.create({
+    data: {
+      userId: user.id,
+      customerId: customer5.id,
+      name: "業務システム構築",
+      description: "社内業務システムのカスタマイズ",
+      contractType: "FIXED",
+      contractAmount: 600000,
+      startDate: new Date("2025-10-01"),
+      status: "COMPLETED",
     },
   });
 
@@ -209,6 +277,110 @@ async function main() {
     },
   });
 
+  const invoice5 = await prisma.invoice.create({
+    data: {
+      userId: user.id,
+      customerId: customer3.id,
+      projectId: project3.id,
+      invoiceNumber: "INV-2025-12-002",
+      status: "PAID",
+      issuedAt: new Date("2025-12-05"),
+      dueAt: new Date("2025-12-31"),
+      totalAmount: 400000,
+      paidAmount: 400000,
+      items: {
+        create: [
+          {
+            name: "ECサイト設計費",
+            description: "要件定義・画面設計",
+            quantity: 1,
+            unitPrice: 400000,
+            amount: 400000,
+            sortOrder: 0,
+          },
+        ],
+      },
+    },
+  });
+
+  const invoice6 = await prisma.invoice.create({
+    data: {
+      userId: user.id,
+      customerId: customer4.id,
+      projectId: project4.id,
+      invoiceNumber: "INV-2025-11-002",
+      status: "PAID",
+      issuedAt: new Date("2025-11-10"),
+      dueAt: new Date("2025-11-30"),
+      totalAmount: 600000,
+      paidAmount: 600000,
+      items: {
+        create: [
+          {
+            name: "アプリ開発費（第1フェーズ）",
+            description: "画面設計・基本機能実装",
+            quantity: 1,
+            unitPrice: 600000,
+            amount: 600000,
+            sortOrder: 0,
+          },
+        ],
+      },
+    },
+  });
+
+  const invoice7 = await prisma.invoice.create({
+    data: {
+      userId: user.id,
+      customerId: customer5.id,
+      projectId: project5.id,
+      invoiceNumber: "INV-2025-10-001",
+      status: "PAID",
+      issuedAt: new Date("2025-10-15"),
+      dueAt: new Date("2025-11-15"),
+      totalAmount: 600000,
+      paidAmount: 600000,
+      items: {
+        create: [
+          {
+            name: "業務システム構築費",
+            description: "カスタマイズ開発一式",
+            quantity: 1,
+            unitPrice: 600000,
+            amount: 600000,
+            sortOrder: 0,
+          },
+        ],
+      },
+    },
+  });
+
+  const invoice8 = await prisma.invoice.create({
+    data: {
+      userId: user.id,
+      customerId: customer4.id,
+      projectId: project4.id,
+      invoiceNumber: "INV-2026-01-003",
+      status: "PAID",
+      issuedAt: new Date("2026-01-05"),
+      dueAt: new Date("2026-02-05"),
+      totalAmount: 600000,
+      paidAmount: 600000,
+      items: {
+        create: [
+          {
+            name: "アプリ開発費（第2フェーズ）",
+            description: "詳細機能実装・テスト",
+            quantity: 1,
+            unitPrice: 600000,
+            amount: 600000,
+            sortOrder: 0,
+          },
+        ],
+      },
+    },
+  });
+
   console.log("✅ Invoices created");
 
   // 入金作成
@@ -249,6 +421,46 @@ async function main() {
       paidAt: new Date("2026-01-08"),
       paymentMethod: "BANK_TRANSFER",
       notes: "1月分保守費",
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      invoiceId: invoice5.id,
+      amount: 400000,
+      paidAt: new Date("2025-12-20"),
+      paymentMethod: "BANK_TRANSFER",
+      notes: "ECサイト設計費",
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      invoiceId: invoice6.id,
+      amount: 600000,
+      paidAt: new Date("2025-11-25"),
+      paymentMethod: "BANK_TRANSFER",
+      notes: "アプリ開発第1フェーズ",
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      invoiceId: invoice7.id,
+      amount: 600000,
+      paidAt: new Date("2025-11-10"),
+      paymentMethod: "BANK_TRANSFER",
+      notes: "業務システム構築費",
+    },
+  });
+
+  await prisma.payment.create({
+    data: {
+      invoiceId: invoice8.id,
+      amount: 600000,
+      paidAt: new Date("2026-01-12"),
+      paymentMethod: "BANK_TRANSFER",
+      notes: "アプリ開発第2フェーズ",
     },
   });
 

@@ -333,7 +333,7 @@ export default function DashboardPage() {
 
       {/* 案件別売上ランキング */}
       <Card className="mb-6 md:mb-8">
-        <h2 className="text-base sm:text-lg font-semibold mb-4">
+        <h2 className="text-base sm:text-lg font-semibold mb-6">
           案件別売上ランキング
         </h2>
         {projectSales.length > 0 ? (
@@ -341,7 +341,7 @@ export default function DashboardPage() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={projectSales.slice(0, 5)}
-                margin={{ top: 20, right: 30, left: 10, bottom: 40 }}
+                margin={{ top: 20, right: 30, left: 10, bottom: 25 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                 <XAxis
@@ -367,6 +367,7 @@ export default function DashboardPage() {
                 <Legend
                   verticalAlign="bottom"
                   height={36}
+                  wrapperStyle={{ paddingTop: "5px" }}
                   iconType="rect"
                   iconSize={12}
                 />

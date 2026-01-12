@@ -272,7 +272,7 @@ export default function ReportsPage() {
 
         {/* 案件別売上 */}
         <Card>
-          <h2 className="text-base sm:text-lg font-semibold mb-4">
+          <h2 className="text-base sm:text-lg font-semibold mb-6">
             案件別売上
           </h2>
           {projectSales && projectSales.length > 0 ? (
@@ -281,7 +281,7 @@ export default function ReportsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={projectSales.slice(0, 5)}
-                    margin={{ top: 20, right: 30, left: 10, bottom: 40 }}
+                    margin={{ top: 20, right: 30, left: 10, bottom: 25 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis
@@ -312,6 +312,7 @@ export default function ReportsPage() {
                     <Legend
                       verticalAlign="bottom"
                       height={36}
+                      wrapperStyle={{ paddingTop: "20px" }}
                       iconType="rect"
                       iconSize={12}
                     />
