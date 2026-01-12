@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import * as bcrypt from "bcryptjs";
 import { prisma } from "@/infrastructure/db/prisma";
+import { createDefaultExpenseCategories } from "./defaultData";
 
 // 簡易的なログイン試行カウンター（本番環境では Redis 推奨）
 const loginAttempts = new Map<string, { count: number; resetTime: number }>();
@@ -96,13 +97,19 @@ export const authOptions: NextAuthOptions = {
             Math.random().toString(36),
             12
           );
-          await prisma.user.create({
+          const newUser = await prisma.user.create({
             data: {
               email: user.email!,
               name: user.name || user.email!.split("@")[0],
               password: randomPassword, // Googleログインユーザーは使用しない
             },
           });
+
+          // デフォルトの経費カテゴリを作成
+          await createDefaultExpenseCategories(newUser.id);
+
+          // デフォルトの経費カテゴリを作成
+          await createDefaultExpenseCategories(newUser.id);
         }
       }
       return true;

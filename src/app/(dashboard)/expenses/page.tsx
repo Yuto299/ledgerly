@@ -26,7 +26,9 @@ const PAYMENT_METHOD_LABELS: Record<string, string> = {
 export default function ExpensesPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [projectFilter, setProjectFilter] = useState<string>("");
-  const [monthFilter, setMonthFilter] = useState<string>("");
+  const [monthFilter, setMonthFilter] = useState<string>(
+    (new Date().getMonth() + 1).toString().padStart(2, "0")
+  );
   const [yearFilter, setYearFilter] = useState<string>(
     new Date().getFullYear().toString()
   );

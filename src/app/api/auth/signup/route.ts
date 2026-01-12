@@ -4,6 +4,7 @@ import { prisma } from "@/infrastructure/db/prisma";
 import { strongPasswordSchema } from "@/lib/security/password";
 import { checkRateLimit, getIdentifier } from "@/lib/security/rateLimit";
 import { z } from "zod";
+import { createDefaultExpenseCategories } from "@/lib/auth/defaultData";
 
 const signupSchema = z.object({
   name: z.string().min(1, "名前を入力してください"),
@@ -70,6 +71,9 @@ export async function POST(req: NextRequest) {
         email: true,
       },
     });
+
+    // デフォルトの経費カテゴリを作成
+    await createDefaultExpenseCategories(user.id);
 
     return NextResponse.json(
       {
