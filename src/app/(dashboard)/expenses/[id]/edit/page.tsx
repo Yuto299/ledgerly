@@ -173,7 +173,9 @@ export default function EditExpensePage({
             <Label htmlFor="projectId">案件（任意）</Label>
             <select
               id="projectId"
-              {...register("projectId")}
+              {...register("projectId", {
+                setValueAs: (v) => (v === "" ? undefined : v),
+              })}
               className="w-full rounded-md border border-gray-300 px-3 py-2"
             >
               <option value="">なし</option>

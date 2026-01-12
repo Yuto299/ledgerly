@@ -48,6 +48,7 @@ export async function updateInvoice(
       customerId: validatedData.customerId,
       projectId: validatedData.projectId,
       invoiceNumber: validatedData.invoiceNumber,
+      status: validatedData.status,
       issuedAt: validatedData.issuedAt
         ? new Date(validatedData.issuedAt)
         : undefined,
@@ -71,6 +72,7 @@ export async function updateInvoice(
       customerId: validatedData.customerId,
       projectId: validatedData.projectId,
       invoiceNumber: validatedData.invoiceNumber,
+      status: validatedData.status,
       issuedAt: validatedData.issuedAt
         ? new Date(validatedData.issuedAt)
         : undefined,

@@ -110,7 +110,18 @@ export default function ProjectForm({
         label="契約金額（円）"
         type="number"
         error={errors.contractAmount?.message}
-        {...register("contractAmount", { valueAsNumber: true })}
+        {...register("contractAmount", {
+          setValueAs: (v) => (v === "" || isNaN(v) ? undefined : Number(v)),
+        })}
+      />
+
+      <FormField
+        label="時給（円）"
+        type="number"
+        error={errors.hourlyRate?.message}
+        {...register("hourlyRate", {
+          setValueAs: (v) => (v === "" || isNaN(v) ? undefined : Number(v)),
+        })}
       />
 
       <FormField

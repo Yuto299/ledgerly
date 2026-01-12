@@ -32,6 +32,7 @@ export default function InvoiceForm({
     handleSubmit,
     control,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<CreateInvoiceDto>({
     resolver: zodResolver(createInvoiceSchema),
@@ -40,7 +41,7 @@ export default function InvoiceForm({
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     control,
     name: "items",
   });
@@ -48,13 +49,76 @@ export default function InvoiceForm({
   const customers = customersData?.customers || [];
   const projects = projectsData?.projects || [];
   const watchedItems = watch("items");
+  const watchedProjectId = watch("projectId");
+  const watchedCustomerId = watch("customerId");
 
-  // 合計金額を計算
+  // 選択された顧客の案件のみフィルタリング
+  const filteredProjects = watchedCustomerId
+    ? projects.filter((p) => p.customerId === watchedCustomerId)
+    : [];
+
+  // 顧客変更時に案件選択をクリア（新規作成時のみ）
+  useEffect(() => {
+    // 編集モードの場合はクリアしない
+    if (defaultValues?.customerId) return;
+    setValue("projectId", "");
+  }, [watchedCustomerId, setValue, defaultValues]);
+
+  // 案件選択時に明細を自動生成（新規作成時のみ）
+  useEffect(() => {
+    // 編集モードの場合は自動生成しない
+    if (defaultValues?.projectId) return;
+
+    if (watchedProjectId && projects.length > 0) {
+      const selectedProject = projects.find((p) => p.id === watchedProjectId);
+      if (selectedProject) {
+        // 時給契約の場合
+        if (
+          selectedProject.contractType === "HOURLY" &&
+          selectedProject.hourlyRate
+        ) {
+          replace([
+            {
+              description: selectedProject.name,
+              quantity: 1,
+              unitPrice: selectedProject.hourlyRate,
+            },
+          ]);
+        }
+        // 固定報酬または成果報酬の場合
+        else if (selectedProject.contractAmount) {
+          replace([
+            {
+              description: selectedProject.name,
+              quantity: 1,
+              unitPrice: selectedProject.contractAmount,
+            },
+          ]);
+        }
+        // 金額未設定の場合は案件名だけセット
+        else {
+          replace([
+            {
+              description: selectedProject.name,
+              quantity: 1,
+              unitPrice: 0,
+            },
+          ]);
+        }
+      }
+    }
+  }, [watchedProjectId, projects, replace]);
+
+  // 合計金額を計算（時給 × 時間 または 数量 × 単価）
   const totalAmount =
-    watchedItems?.reduce(
-      (sum, item) => sum + (item.quantity || 0) * (item.unitPrice || 0),
-      0
-    ) || 0;
+    watchedItems?.reduce((sum, item) => {
+      if (item.hours && item.hours > 0) {
+        // 時給契約の場合：時給 × 時間
+        return sum + item.hours * (item.unitPrice || 0);
+      }
+      // 通常：数量 × 単価
+      return sum + (item.quantity || 0) * (item.unitPrice || 0);
+    }, 0) || 0;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -95,9 +159,14 @@ export default function InvoiceForm({
           id="projectId"
           className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
           {...register("projectId")}
+          disabled={!watchedCustomerId}
         >
-          <option value="">案件を選択してください</option>
-          {projects.map((project) => (
+          <option value="">
+            {watchedCustomerId
+              ? "案件を選択してください"
+              : "先に顧客を選択してください"}
+          </option>
+          {filteredProjects.map((project) => (
             <option key={project.id} value={project.id}>
               {project.name}
             </option>
@@ -111,10 +180,32 @@ export default function InvoiceForm({
       </div>
 
       <FormField
-        label="請求書番号"
+        label="請求書番号（自動採番）"
+        placeholder="未入力の場合は自動生成されます"
         error={errors.invoiceNumber?.message}
         {...register("invoiceNumber")}
       />
+
+      <div>
+        <label
+          htmlFor="status"
+          className="block text-sm font-medium text-gray-700"
+        >
+          ステータス
+        </label>
+        <select
+          id="status"
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+          {...register("status")}
+        >
+          <option value="DRAFT">下書き</option>
+          <option value="SENT">請求済</option>
+          <option value="PAID">入金済</option>
+        </select>
+        {errors.status && (
+          <p className="mt-1 text-sm text-red-600">{errors.status.message}</p>
+        )}
+      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <FormField
@@ -210,11 +301,32 @@ export default function InvoiceForm({
                     </p>
                   )}
                 </div>
+                <div>
+                  <input
+                    type="number"
+                    step="0.5"
+                    placeholder="稼働時間（時間・オプション）"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    {...register(`items.${index}.hours`, {
+                      setValueAs: (v) =>
+                        v === "" || isNaN(v) ? undefined : Number(v),
+                    })}
+                  />
+                  {errors.items?.[index]?.hours && (
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.items[index]?.hours?.message}
+                    </p>
+                  )}
+                </div>
                 <div className="flex items-center">
                   <span className="text-sm font-medium text-gray-700">
                     {formatCurrency(
-                      (watchedItems?.[index]?.quantity || 0) *
-                        (watchedItems?.[index]?.unitPrice || 0)
+                      watchedItems?.[index]?.hours &&
+                        watchedItems[index].hours! > 0
+                        ? watchedItems[index].hours! *
+                            (watchedItems[index]?.unitPrice || 0)
+                        : (watchedItems?.[index]?.quantity || 0) *
+                            (watchedItems?.[index]?.unitPrice || 0)
                     )}
                   </span>
                 </div>

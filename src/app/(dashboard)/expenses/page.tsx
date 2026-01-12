@@ -26,10 +26,28 @@ const PAYMENT_METHOD_LABELS: Record<string, string> = {
 export default function ExpensesPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>("");
   const [projectFilter, setProjectFilter] = useState<string>("");
+  const [monthFilter, setMonthFilter] = useState<string>("");
+  const [yearFilter, setYearFilter] = useState<string>(
+    new Date().getFullYear().toString()
+  );
 
   const { data, isLoading, error } = useExpenses({
     categoryId: categoryFilter || undefined,
     projectId: projectFilter || undefined,
+    startDate: monthFilter
+      ? `${yearFilter}-${monthFilter}-01`
+      : yearFilter
+      ? `${yearFilter}-01-01`
+      : undefined,
+    endDate: monthFilter
+      ? `${yearFilter}-${monthFilter}-${new Date(
+          parseInt(yearFilter),
+          parseInt(monthFilter),
+          0
+        ).getDate()}`
+      : yearFilter
+      ? `${yearFilter}-12-31`
+      : undefined,
     limit: 100,
   });
   const { data: categoriesData } = useExpenseCategories();
@@ -108,6 +126,12 @@ export default function ExpensesPage() {
   const categories = categoriesData?.categories || [];
   const projects = projectsData?.projects || [];
 
+  // 合計金額を計算
+  const totalAmount = expenses.reduce(
+    (sum, expense) => sum + expense.amount,
+    0
+  );
+
   return (
     <div className="px-4 py-4 md:px-0 md:py-0">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -127,8 +151,50 @@ export default function ExpensesPage() {
       </div>
 
       <Card className="mb-6">
-        <div className="flex gap-4">
-          <div className="flex-1">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              年
+            </label>
+            <select
+              value={yearFilter}
+              onChange={(e) => setYearFilter(e.target.value)}
+              className="w-full rounded-md border border-gray-300 px-3 py-2"
+            >
+              <option value="">すべて</option>
+              {Array.from({ length: 10 }, (_, i) => {
+                const year = new Date().getFullYear() - i;
+                return (
+                  <option key={year} value={year}>
+                    {year}年
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              月
+            </label>
+            <select
+              value={monthFilter}
+              onChange={(e) => setMonthFilter(e.target.value)}
+              className="w-full rounded-md border border-gray-300 px-3 py-2"
+            >
+              <option value="">すべて</option>
+              {Array.from({ length: 12 }, (_, i) => {
+                const month = String(i + 1).padStart(2, "0");
+                return (
+                  <option key={month} value={month}>
+                    {i + 1}月
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               カテゴリ
             </label>
@@ -146,7 +212,7 @@ export default function ExpensesPage() {
             </select>
           </div>
 
-          <div className="flex-1">
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               案件
             </label>
@@ -163,21 +229,34 @@ export default function ExpensesPage() {
               ))}
             </select>
           </div>
-
-          {(categoryFilter || projectFilter) && (
-            <div className="flex items-end">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setCategoryFilter("");
-                  setProjectFilter("");
-                }}
-              >
-                クリア
-              </Button>
-            </div>
-          )}
         </div>
+
+        {(yearFilter || monthFilter || categoryFilter || projectFilter) && (
+          <div className="mt-4 flex items-center justify-between">
+            <div className="text-sm text-gray-600">
+              {monthFilter
+                ? `${yearFilter}年${parseInt(monthFilter)}月`
+                : yearFilter
+                ? `${yearFilter}年`
+                : "全期間"}
+              の合計:
+              <span className="ml-2 text-lg font-bold text-gray-900">
+                {formatCurrency(totalAmount)}
+              </span>
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setYearFilter(new Date().getFullYear().toString());
+                setMonthFilter("");
+                setCategoryFilter("");
+                setProjectFilter("");
+              }}
+            >
+              クリア
+            </Button>
+          </div>
+        )}
       </Card>
 
       {expenses.length === 0 ? (

@@ -6,6 +6,7 @@ import {
   useInvoice,
   useDeleteInvoice,
   useMarkInvoiceSent,
+  useMarkInvoicePaid,
 } from "@/features/invoices/hooks/useInvoices";
 import {
   usePaymentsByInvoice,
@@ -46,6 +47,7 @@ export default function InvoiceDetailPage({
   const { data: paymentsData } = usePaymentsByInvoice(id);
   const { mutate: deleteInvoice, isPending: isDeleting } = useDeleteInvoice();
   const { mutate: markSent, isPending: isSending } = useMarkInvoiceSent();
+  const { mutate: markPaid, isPending: isMarkingPaid } = useMarkInvoicePaid();
   const { mutate: registerPayment, isPending: isRegistering } =
     useRegisterPayment(id);
   const { mutate: deletePayment } = useDeletePayment(id);
@@ -61,6 +63,12 @@ export default function InvoiceDetailPage({
   const handleMarkSent = () => {
     if (window.confirm("この請求書を送付済みにしますか？")) {
       markSent(id);
+    }
+  };
+
+  const handleMarkPaid = () => {
+    if (window.confirm("この請求書を入金済みにしますか？")) {
+      markPaid(id);
     }
   };
 
@@ -152,6 +160,15 @@ export default function InvoiceDetailPage({
               disabled={isSending}
             >
               {isSending ? "送付中..." : "送付済みにする"}
+            </Button>
+          )}
+          {invoice.status === "SENT" && (
+            <Button
+              variant="outline"
+              onClick={handleMarkPaid}
+              disabled={isMarkingPaid}
+            >
+              {isMarkingPaid ? "処理中..." : "入金済みにする"}
             </Button>
           )}
           <Button

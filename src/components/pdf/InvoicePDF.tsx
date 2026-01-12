@@ -256,7 +256,6 @@ interface InvoiceItem {
 interface Invoice {
   id: string;
   invoiceNumber: string | null;
-  status: string;
   issuedAt: Date;
   dueAt: Date;
   totalAmount: number;

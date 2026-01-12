@@ -15,6 +15,7 @@ export const createProjectSchema = z.object({
     .number()
     .min(0, "契約金額は0以上で入力してください")
     .optional(),
+  hourlyRate: z.number().min(0, "時給は0以上で入力してください").optional(),
   startDate: z
     .string()
     .optional()
@@ -48,6 +49,7 @@ export const projectResponseSchema = z.object({
   description: z.string().nullable(),
   contractType: z.enum(["FIXED", "HOURLY", "COMMISSION"]),
   contractAmount: z.number().nullable(),
+  hourlyRate: z.number().nullable(),
   startDate: z.date().nullable(),
   endDate: z.date().nullable(),
   status: z.enum(["PROSPECT", "IN_PROGRESS", "COMPLETED", "LOST"]),

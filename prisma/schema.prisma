@@ -121,7 +121,8 @@ model Project {
   name         String
   description  String?
   contractType ContractType  @map("contract_type")
-  contractAmount Int?        @map("contract_amount") // 契約金額（円）
+  contractAmount Int?        @map("contract_amount") // 契約金額（円）- 固定報酬の場合
+  hourlyRate   Int?          @map("hourly_rate")     // 時給（円）- 時給契約の場合
   startDate    DateTime?     @map("start_date")
   endDate      DateTime?     @map("end_date")
   status       ProjectStatus @default(PROSPECT)
@@ -195,6 +196,7 @@ model InvoiceItem {
   quantity    Int      @default(1) // 数量
   unitPrice   Int      @map("unit_price") // 単価（円）
   amount      Int      // 金額（円）※ quantity * unitPrice
+  hours       Float?   // 稼働時間（時給契約の場合）
   sortOrder   Int      @default(0) @map("sort_order") // 表示順
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")

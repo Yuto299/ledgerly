@@ -100,3 +100,18 @@ export function useMarkInvoiceSent() {
     },
   });
 }
+
+/**
+ * 請求書入金済みフック
+ */
+export function useMarkInvoicePaid() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => updateInvoice(id, { status: "PAID" }),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: ["invoices"] });
+      queryClient.invalidateQueries({ queryKey: ["invoices", id] });
+    },
+  });
+}

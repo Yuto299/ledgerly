@@ -95,6 +95,7 @@ export class ProjectRepository {
     description?: string;
     contractType: ContractType;
     contractAmount?: number;
+    hourlyRate?: number;
     startDate?: Date;
     endDate?: Date;
     status?: ProjectStatus;
@@ -124,6 +125,7 @@ export class ProjectRepository {
       description?: string;
       contractType?: ContractType;
       contractAmount?: number;
+      hourlyRate?: number;
       startDate?: Date;
       endDate?: Date;
       status?: ProjectStatus;

@@ -60,6 +60,7 @@ export default function EditInvoicePage({
             customerId: invoice.customerId,
             projectId: invoice.projectId,
             invoiceNumber: invoice.invoiceNumber || "",
+            status: invoice.status,
             issuedAt: new Date(invoice.issuedAt).toISOString().split("T")[0],
             dueAt: new Date(invoice.dueAt).toISOString().split("T")[0],
             notes: invoice.notes || "",

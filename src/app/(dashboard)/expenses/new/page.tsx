@@ -3,9 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useEffect } from "react";
 import { useCreateExpense } from "@/features/expenses/hooks/useExpenses";
 import { useExpenseCategories } from "@/features/expense-categories/hooks/useExpenseCategories";
 import { useProjects } from "@/features/projects/hooks/useProjects";
+import { useCustomers } from "@/features/customers/hooks/useCustomers";
 import {
   CreateExpenseDto,
   createExpenseSchema,
@@ -19,10 +21,14 @@ export default function NewExpensePage() {
   const { mutate: createExpense, isPending } = useCreateExpense();
   const { data: categoriesData } = useExpenseCategories();
   const { data: projectsData } = useProjects({ limit: 100 });
+  const { data: customersData } = useCustomers({ limit: 100 });
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string>("");
 
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<CreateExpenseDto>({
     resolver: zodResolver(createExpenseSchema),
@@ -33,7 +39,14 @@ export default function NewExpensePage() {
     },
   });
 
-  const onSubmit = (data: CreateExpenseDto) => {
+  const watchedProjectId = watch("projectId");
+
+  // 顧客変更時に案件選択をクリア
+  useEffect(() => {
+    setValue("projectId", undefined);
+  }, [selectedCustomerId, setValue]);
+
+  const onSubmit = (data: CreateExpenseDto) {
     createExpense(data, {
       onSuccess: () => {
         router.push("/expenses");
@@ -43,6 +56,12 @@ export default function NewExpensePage() {
 
   const categories = categoriesData?.categories || [];
   const projects = projectsData?.projects || [];
+  const customers = customersData?.customers || [];
+
+  // 選択された顧客の案件のみフィルタリング
+  const filteredProjects = selectedCustomerId
+    ? projects.filter((p) => p.customerId === selectedCustomerId)
+    : projects;
 
   return (
     <div>
@@ -125,14 +144,38 @@ export default function NewExpensePage() {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="projectId">案件（任意）</Label>
+            <Label htmlFor="customerId">顧客（任意）</Label>
             <select
-              id="projectId"
-              {...register("projectId")}
+              id="customerId"
+              value={selectedCustomerId}
+              onChange={(e) => setSelectedCustomerId(e.target.value)}
               className="w-full rounded-md border border-gray-300 px-3 py-2"
             >
               <option value="">なし</option>
-              {projects.map((project) => (
+              {customers.map((customer) => (
+                <option key={customer.id} value={customer.id}>
+                  {customer.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="projectId">案件（任意）</Label>
+            <select
+              id="projectId"
+              {...register("projectId", {
+                setValueAs: (v) => (v === "" ? undefined : v),
+              })}
+              className="w-full rounded-md border border-gray-300 px-3 py-2"
+              disabled={!selectedCustomerId && filteredProjects.length === 0}
+            >
+              <option value="">
+                {selectedCustomerId
+                  ? "なし"
+                  : "顧客を選択すると案件を絞り込みます"}
+              </option>
+              {filteredProjects.map((project) => (
                 <option key={project.id} value={project.id}>
                   {project.name}
                 </option>

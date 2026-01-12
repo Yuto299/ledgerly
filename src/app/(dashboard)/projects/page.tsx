@@ -171,7 +171,9 @@ export default function ProjectsPage() {
                       {CONTRACT_TYPE_LABELS[project.contractType]}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {project.contractAmount
+                      {project.contractType === "HOURLY" && project.hourlyRate
+                        ? `${formatCurrency(project.hourlyRate)}/時間`
+                        : project.contractAmount
                         ? formatCurrency(project.contractAmount)
                         : "-"}
                     </td>

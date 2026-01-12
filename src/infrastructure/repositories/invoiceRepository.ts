@@ -124,6 +124,7 @@ export class InvoiceRepository {
     customerId: string;
     projectId: string;
     invoiceNumber?: string;
+    status?: InvoiceStatus;
     issuedAt: Date;
     dueAt: Date;
     totalAmount: number;
@@ -174,6 +175,7 @@ export class InvoiceRepository {
       customerId?: string;
       projectId?: string;
       invoiceNumber?: string;
+      status?: InvoiceStatus;
       issuedAt?: Date;
       dueAt?: Date;
       totalAmount?: number;

@@ -21,6 +21,7 @@ export async function createProject(userId: string, data: CreateProjectDto) {
     description: validatedData.description,
     contractType: validatedData.contractType as ContractType,
     contractAmount: validatedData.contractAmount,
+    hourlyRate: validatedData.hourlyRate,
     startDate: validatedData.startDate
       ? new Date(validatedData.startDate)
       : undefined,

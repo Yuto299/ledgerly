@@ -10,6 +10,7 @@ export const createInvoiceItemSchema = z.object({
     .max(500, "明細説明は500文字以内で入力してください"),
   quantity: z.number().min(1, "数量は1以上で入力してください"),
   unitPrice: z.number().min(0, "単価は0以上で入力してください"),
+  hours: z.number().min(0, "稼働時間は0以上で入力してください").optional(),
 });
 
 /**
@@ -19,6 +20,7 @@ export const createInvoiceSchema = z.object({
   customerId: z.string().uuid("有効な顧客IDを選択してください"),
   projectId: z.string().uuid("有効な案件IDを選択してください"),
   invoiceNumber: z.string().optional(),
+  status: z.enum(["DRAFT", "SENT", "PAID"]).optional(),
   issuedAt: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: "有効な請求日を入力してください",
   }),
@@ -36,6 +38,7 @@ export const updateInvoiceSchema = z.object({
   customerId: z.string().uuid("有効な顧客IDを選択してください").optional(),
   projectId: z.string().uuid("有効な案件IDを選択してください").optional(),
   invoiceNumber: z.string().optional(),
+  status: z.enum(["DRAFT", "SENT", "PAID"]).optional(),
   issuedAt: z
     .string()
     .optional()
@@ -62,6 +65,7 @@ export const invoiceItemResponseSchema = z.object({
   quantity: z.number(),
   unitPrice: z.number(),
   amount: z.number(),
+  hours: z.number().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
