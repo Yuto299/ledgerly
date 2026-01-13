@@ -142,9 +142,11 @@ export default function ReportsPage() {
       )}
 
       {/* 月別推移グラフ */}
-      <Card className="mb-6 md:mb-8">
+      <Card className="mb-6 md:mb-8 shadow-sm">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-          <h2 className="text-base sm:text-lg font-semibold">月別推移</h2>
+          <h2 className="text-base sm:text-lg font-semibold text-gray-800">
+            月別推移
+          </h2>
           <select
             value={trendMonths}
             onChange={(e) => setTrendMonths(Number(e.target.value))}
@@ -157,39 +159,102 @@ export default function ReportsPage() {
         </div>
         {trend && trend.length > 0 ? (
           <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-            <ResponsiveContainer width="100%" height={350} minWidth={400}>
+            <ResponsiveContainer width="100%" height={380} minWidth={400}>
               <LineChart
                 data={trend}
                 margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
               >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" tick={{ fontSize: 12 }} />
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#60a5fa" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient
+                    id="colorExpenses"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop offset="5%" stopColor="#c084fc" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#c084fc" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#34d399" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#34d399" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="#e5e7eb"
+                  strokeOpacity={0.5}
+                />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fontSize: 11, fill: "#6b7280" }}
+                  axisLine={{ stroke: "#e5e7eb" }}
+                  tickLine={{ stroke: "#e5e7eb" }}
+                />
                 <YAxis
                   tickFormatter={(value) => `¥${(value / 1000).toFixed(0)}k`}
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 11, fill: "#6b7280" }}
+                  axisLine={{ stroke: "#e5e7eb" }}
+                  tickLine={{ stroke: "#e5e7eb" }}
                 />
-                <Tooltip formatter={(value: number) => formatCurrency(value)} />
-                <Legend />
+                <Tooltip
+                  formatter={(value: number) => formatCurrency(value)}
+                  contentStyle={{
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                  }}
+                />
+                <Legend wrapperStyle={{ fontSize: "13px" }} iconType="circle" />
                 <Line
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#10b981"
+                  stroke="#60a5fa"
+                  strokeWidth={3}
                   name="売上"
-                  strokeWidth={2}
+                  dot={{
+                    r: 4,
+                    fill: "#60a5fa",
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                  }}
+                  activeDot={{ r: 6 }}
+                  fill="url(#colorRevenue)"
                 />
                 <Line
                   type="monotone"
                   dataKey="expenses"
-                  stroke="#ef4444"
+                  stroke="#c084fc"
+                  strokeWidth={3}
                   name="経費"
-                  strokeWidth={2}
+                  dot={{
+                    r: 4,
+                    fill: "#c084fc",
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                  }}
+                  activeDot={{ r: 6 }}
+                  fill="url(#colorExpenses)"
                 />
                 <Line
                   type="monotone"
                   dataKey="profit"
-                  stroke="#3b82f6"
+                  stroke="#34d399"
+                  strokeWidth={3}
                   name="利益"
-                  strokeWidth={2}
+                  dot={{
+                    r: 4,
+                    fill: "#34d399",
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                  }}
+                  activeDot={{ r: 6 }}
+                  fill="url(#colorProfit)"
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -203,8 +268,8 @@ export default function ReportsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
         {/* 経費カテゴリ別内訳 */}
-        <Card>
-          <h2 className="text-base sm:text-lg font-semibold mb-4">
+        <Card className="shadow-sm">
+          <h2 className="text-base sm:text-lg font-semibold mb-4 text-gray-800">
             経費カテゴリ別内訳
           </h2>
           {expenseBreakdown && expenseBreakdown.length > 0 ? (
@@ -217,7 +282,9 @@ export default function ReportsPage() {
                     nameKey="categoryName"
                     cx="50%"
                     cy="50%"
-                    outerRadius={80}
+                    outerRadius={90}
+                    innerRadius={55}
+                    paddingAngle={3}
                     label={(entry) => {
                       const percent = (
                         (entry.amount /
@@ -227,16 +294,26 @@ export default function ReportsPage() {
                           )) *
                         100
                       ).toFixed(0);
-                      return `${entry.categoryName} (${percent}%)`;
+                      return `${percent}%`;
                     }}
-                    labelLine={true}
+                    labelLine={false}
                   >
                     {expenseBreakdown.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.categoryColor} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={entry.categoryColor}
+                        opacity={0.85}
+                      />
                     ))}
                   </Pie>
                   <Tooltip
                     formatter={(value: number) => formatCurrency(value)}
+                    contentStyle={{
+                      backgroundColor: "rgba(255, 255, 255, 0.95)",
+                      border: "1px solid #e5e7eb",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                    }}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -271,8 +348,8 @@ export default function ReportsPage() {
         </Card>
 
         {/* 案件別売上 */}
-        <Card>
-          <h2 className="text-base sm:text-lg font-semibold mb-6">
+        <Card className="shadow-sm">
+          <h2 className="text-base sm:text-lg font-semibold mb-6 text-gray-800">
             案件別売上
           </h2>
           {projectSales && projectSales.length > 0 ? (
@@ -283,52 +360,104 @@ export default function ReportsPage() {
                     data={projectSales.slice(0, 5)}
                     margin={{ top: 20, right: 30, left: 10, bottom: 50 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <defs>
+                      <linearGradient
+                        id="gradientBilled"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor="#60a5fa"
+                          stopOpacity={0.9}
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#3b82f6"
+                          stopOpacity={0.7}
+                        />
+                      </linearGradient>
+                      <linearGradient
+                        id="gradientPaid"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="0%"
+                          stopColor="#34d399"
+                          stopOpacity={0.9}
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#10b981"
+                          stopOpacity={0.7}
+                        />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="#e5e7eb"
+                      strokeOpacity={0.5}
+                    />
                     <XAxis
                       dataKey="projectName"
                       angle={0}
                       textAnchor="middle"
                       height={100}
                       interval={0}
-                      tick={{ fontSize: 12 }}
+                      tick={{ fontSize: 12, fill: "#6b7280" }}
                       style={{ fontWeight: 500 }}
+                      axisLine={{ stroke: "#e5e7eb" }}
+                      tickLine={{ stroke: "#e5e7eb" }}
                     />
                     <YAxis
                       tickFormatter={(value) =>
                         `¥${(value / 1000).toFixed(0)}k`
                       }
-                      tick={{ fontSize: 13 }}
+                      tick={{ fontSize: 13, fill: "#6b7280" }}
                       width={70}
                       domain={[
                         0,
                         (dataMax: number) => Math.ceil(dataMax * 1.2),
                       ]}
+                      axisLine={{ stroke: "#e5e7eb" }}
+                      tickLine={{ stroke: "#e5e7eb" }}
                     />
                     <Tooltip
                       formatter={(value: number) => formatCurrency(value)}
                       labelStyle={{ fontSize: 14, fontWeight: "bold" }}
-                      contentStyle={{ fontSize: 13 }}
+                      contentStyle={{
+                        fontSize: 13,
+                        backgroundColor: "rgba(255, 255, 255, 0.95)",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: "8px",
+                        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                      }}
                     />
                     <Legend
                       verticalAlign="bottom"
                       height={36}
-                      wrapperStyle={{ paddingTop: "20px" }}
-                      iconType="rect"
-                      iconSize={12}
+                      wrapperStyle={{ paddingTop: "20px", fontSize: "13px" }}
+                      iconType="circle"
+                      iconSize={10}
                     />
                     <Bar
                       dataKey="totalBilled"
-                      fill="#3b82f6"
+                      fill="url(#gradientBilled)"
                       name="請求額"
-                      radius={[6, 6, 0, 0]}
-                      barSize={60}
+                      radius={[8, 8, 0, 0]}
+                      barSize={55}
                     />
                     <Bar
                       dataKey="totalPaid"
-                      fill="#10b981"
+                      fill="url(#gradientPaid)"
                       name="入金額"
-                      radius={[6, 6, 0, 0]}
-                      barSize={60}
+                      radius={[8, 8, 0, 0]}
+                      barSize={55}
                     />
                   </BarChart>
                 </ResponsiveContainer>
