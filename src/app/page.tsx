@@ -403,52 +403,58 @@ export default function Home() {
         aria-labelledby="benefits-heading"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-20">
             <h2
               id="benefits-heading"
-              className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight tracking-tight"
+              className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 leading-tight tracking-tight"
             >
               なぜLedgerlyなのか
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-700 font-semibold leading-relaxed">
               フリーランスのために設計された3つの理由
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-4xl">⚡</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+            <div className="bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-2 border-transparent hover:border-orange-300">
+              <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl w-20 h-20 flex items-center justify-center mb-8 shadow-2xl transform hover:rotate-12 transition-transform duration-300">
+                <span className="material-symbols-outlined text-white text-5xl font-light">
+                  bolt
+                </span>
               </div>
-              <h4 className="text-2xl font-bold text-gray-900 mb-3 leading-tight tracking-tight">
-                即座に使える
+              <h4 className="text-2xl font-extrabold text-gray-900 mb-5 leading-snug">
+                登録後<span className="text-orange-500">3分</span>で請求書完成
               </h4>
-              <p className="text-gray-600 leading-relaxed">
-                複雑な設定は不要。アカウント作成後すぐに請求書を発行できます。
+              <p className="text-base text-gray-700 leading-7">
+                面倒な初期設定は一切不要。テンプレートを選んで、顧客情報と金額を入力するだけ。今日から請求業務を効率化できます。
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-4xl">🎯</span>
+            <div className="bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-2 border-transparent hover:border-pink-300">
+              <div className="bg-gradient-to-br from-red-400 to-pink-500 rounded-2xl w-20 h-20 flex items-center justify-center mb-8 shadow-2xl transform hover:rotate-12 transition-transform duration-300">
+                <span className="material-symbols-outlined text-white text-5xl font-light">
+                  track_changes
+                </span>
               </div>
-              <h4 className="text-2xl font-bold text-gray-900 mb-3 leading-tight tracking-tight">
-                シンプル設計
+              <h4 className="text-2xl font-extrabold text-gray-900 mb-5 leading-snug">
+                <span className="text-pink-500">迷わない</span>操作性
               </h4>
-              <p className="text-gray-600 leading-relaxed">
-                必要な機能だけを厳選。迷わず使える直感的なインターフェース。
+              <p className="text-base text-gray-700 leading-7">
+                会計ソフトが初めての方でも安心。直感的なデザインで、やりたいことがすぐに見つかる。ストレスフリーな会計管理を実現します。
               </p>
             </div>
 
-            <div className="text-center">
-              <div className="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-lg">
-                <span className="text-4xl">�</span>
+            <div className="bg-white rounded-3xl p-10 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border-2 border-transparent hover:border-slate-400">
+              <div className="bg-gradient-to-br from-slate-700 to-slate-900 rounded-2xl w-20 h-20 flex items-center justify-center mb-8 shadow-2xl transform hover:rotate-12 transition-transform duration-300">
+                <span className="material-symbols-outlined text-white text-5xl font-light">
+                  diamond
+                </span>
               </div>
-              <h4 className="text-2xl font-bold text-gray-900 mb-3 leading-tight tracking-tight">
-                柔軟なプラン
+              <h4 className="text-2xl font-extrabold text-gray-900 mb-5 leading-snug">
+                <span className="text-slate-700">ずっと無料</span>で使える
               </h4>
-              <p className="text-gray-600 leading-relaxed">
-                無料プランから始めて、必要に応じてアップグレード可能。
+              <p className="text-base text-gray-700 leading-7">
+                月10件までの請求書なら永久無料。クレジットカードの登録も不要。事業が成長したら、お得な有料プランへ簡単アップグレード。
               </p>
             </div>
           </div>
