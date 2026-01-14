@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
   },
   companyBox: {
     width: "45%",
-    alignItems: "flex-start",
-    paddingLeft: 20,
+    alignItems: "flex-end",
+    textAlign: "right",
   },
   companyName: {
     fontSize: 12,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   companyInfoText: {
-    fontSize: 8,
+    fontSize: 9,
     marginBottom: 2,
     lineHeight: 1.4,
   },
@@ -349,13 +349,9 @@ export const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
               {invoice.customer.name} 御中
             </Text>
             {invoice.project?.name && (
-              <Text style={styles.subjectText}>
-                件名: {invoice.project.name}
-              </Text>
+              <Text style={styles.subjectText}>件名: {invoice.project.name}</Text>
             )}
-            <Text style={styles.messageText}>
-              下記の通りご請求申し上げます。
-            </Text>
+            <Text style={styles.messageText}>下記の通りご請求申し上げます。</Text>
           </View>
 
           {/* 請求元 */}
@@ -364,9 +360,7 @@ export const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
               {settings?.businessName || "事業者名未設定"}
             </Text>
             {settings?.postalCode && (
-              <Text style={styles.companyInfoText}>
-                〒{settings.postalCode}
-              </Text>
+              <Text style={styles.companyInfoText}>〒{settings.postalCode}</Text>
             )}
             {settings?.address && (
               <Text style={styles.companyInfoText}>{settings.address}</Text>
@@ -375,9 +369,7 @@ export const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
               <Text style={styles.companyInfoText}>TEL: {settings.phone}</Text>
             )}
             {settings?.email && (
-              <Text style={styles.companyInfoText}>
-                Email: {settings.email}
-              </Text>
+              <Text style={styles.companyInfoText}>Email: {settings.email}</Text>
             )}
             {settings?.representativeName && (
               <Text style={styles.companyInfoText}>
@@ -436,16 +428,14 @@ export const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
           ))}
 
           {/* 空行の追加（デザイン調整用） */}
-          {Array.from({ length: Math.max(0, 8 - invoice.items.length) }).map(
-            (_, i) => (
-              <View key={`empty-${i}`} style={styles.tableRow}>
-                <View style={[styles.tableCell, styles.colItem]} />
-                <View style={[styles.tableCell, styles.colQty]} />
-                <View style={[styles.tableCell, styles.colUnit]} />
-                <View style={[styles.tableCell, styles.colAmount]} />
-              </View>
-            )
-          )}
+          {Array.from({ length: Math.max(0, 8 - invoice.items.length) }).map((_, i) => (
+            <View key={`empty-${i}`} style={styles.tableRow}>
+              <View style={[styles.tableCell, styles.colItem]} />
+              <View style={[styles.tableCell, styles.colQty]} />
+              <View style={[styles.tableCell, styles.colUnit]} />
+              <View style={[styles.tableCell, styles.colAmount]} />
+            </View>
+          ))}
         </View>
 
         {/* 集計セクション */}
@@ -487,8 +477,8 @@ export const InvoicePDF = ({ invoice, settings }: InvoicePDFProps) => {
           </Text>
           <Text style={styles.bankInfoTitle}>お振込先:</Text>
           <Text style={styles.bankInfoText}>
-            {settings?.bankName} {settings?.branchName} ({settings?.accountType}
-            ) {settings?.accountNumber} {settings?.accountHolder}
+            {settings?.bankName} {settings?.branchName} ({settings?.accountType}){" "}
+            {settings?.accountNumber} {settings?.accountHolder}
           </Text>
 
           {(invoice.notes || settings?.invoiceNotes) && (
