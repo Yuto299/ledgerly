@@ -11,8 +11,8 @@
 ## 1. プロジェクトのクローン
 
 ```bash
-git clone https://github.com/yourusername/ledgerly.git
-cd ledgerly
+git clone https://github.com/Yuto299/ledgerly-pre.git
+cd ledgerly-pre
 ```
 
 ---
@@ -48,11 +48,13 @@ cp .env.example .env
 `.env`ファイルを編集（Docker Compose の場合）:
 
 ```env
-DATABASE_URL="postgresql://ledgerly:ledgerly_dev_password@localhost:5432/ledgerly?schema=public"
+DATABASE_URL="postgresql://ledgerly:ledgerly_dev_password@localhost:5433/ledgerly?schema=public"
 NEXTAUTH_URL="http://localhost:3000"
 NEXTAUTH_SECRET="your-secret-key-here-change-in-production"
 NODE_ENV="development"
 ```
+
+> ℹ️ ポートは **5433** です。`docker-compose.yml` でホスト側 `5433` → コンテナ側 `5432` にマップしているため、ローカルの既存 PostgreSQL（5432）と競合しません。
 
 ### Prisma のセットアップ
 
@@ -98,16 +100,14 @@ npm run dev
 
 ## 6. 開発フロー
 
-### ブランチ戦略
+### ブランチ戦略・コミット規約・PR フロー
+
+ブランチ戦略（GitHub Flow）、ブランチ命名規則、コミットメッセージ規約、PR・レビューの流れは [CONTRIBUTING.md](../../CONTRIBUTING.md) に集約しています。新規参画の方はまずそちらを確認してください。
 
 ```bash
-# 機能開発
-git checkout -b feature/customer-management
-
-# 作業後
-git add .
-git commit -m "feat: 顧客管理機能を実装"
-git push origin feature/customer-management
+# 例: 機能開発の開始
+git switch -c feat/customer-management
+# 作業 → コミット（Conventional Commits）→ push → PR 作成
 ```
 
 ### Prisma スキーマ変更時
