@@ -553,10 +553,10 @@ npx prisma migrate deploy
 
 ### 関連プロジェクトドキュメント
 
-- [要件定義](./requirements.md)
-- [アーキテクチャ設計](./architecture.md)
-- [データベース設計](./database.md)
-- [セキュリティ設計](./security.md)
+- [要件定義](../design/requirements.md)
+- [アーキテクチャ設計](../design/architecture.md)
+- [データベース設計](../design/database.md)
+- [セキュリティ設計](../design/security.md)
 
 ---
 

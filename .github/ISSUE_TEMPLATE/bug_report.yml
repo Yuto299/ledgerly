@@ -1,0 +1,51 @@
+name: 🐛 バグ報告
+description: 不具合・想定外の挙動を報告する
+title: "【Bug】"
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 概要
+      description: 何が起きているかを簡潔に書いてください。
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+      description: バグを再現する手順を順番に書いてください。
+      placeholder: |
+        1. ○○ ページを開く
+        2. △△ をクリック
+        3. エラーが表示される
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待する挙動
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の挙動 / エラーメッセージ
+      description: スクリーンショットやログがあれば貼ってください。
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 発生環境
+      options:
+        - ローカル開発環境
+        - 本番（Vercel）
+        - 両方 / 不明
+    validations:
+      required: true
+  - type: textarea
+    id: related
+    attributes:
+      label: 関連ファイル・補足
+      description: 原因に心当たりのあるファイルや、関連 Issue があれば記載してください。

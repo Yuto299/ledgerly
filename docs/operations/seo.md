@@ -6,7 +6,7 @@
 
 ## 実装済みのSEO対策
 
-### 1. **robots.txt** - [/src/app/robots.ts](../src/app/robots.ts)
+### 1. **robots.txt** - [/src/app/robots.ts](../../src/app/robots.ts)
 
 Next.js 14の機能を使用して動的に生成されます。
 
@@ -18,7 +18,7 @@ Next.js 14の機能を使用して動的に生成されます。
 // 自動で /robots.txt として配信される
 ```
 
-### 2. **sitemap.xml** - [/src/app/sitemap.ts](../src/app/sitemap.ts)
+### 2. **sitemap.xml** - [/src/app/sitemap.ts](../../src/app/sitemap.ts)
 
 検索エンジンにページ構造を伝えます。
 
@@ -30,7 +30,7 @@ Next.js 14の機能を使用して動的に生成されます。
 // 自動で /sitemap.xml として配信される
 ```
 
-### 3. **PWA Manifest** - [/src/app/manifest.ts](../src/app/manifest.ts)
+### 3. **PWA Manifest** - [/src/app/manifest.ts](../../src/app/manifest.ts)
 
 PWA対応とブランディング。
 
@@ -38,7 +38,7 @@ PWA対応とブランディング。
 - ✅ テーマカラー
 - ✅ アイコン設定
 
-### 4. **Metadata強化** - [/src/app/layout.tsx](../src/app/layout.tsx)
+### 4. **Metadata強化** - [/src/app/layout.tsx](../../src/app/layout.tsx)
 
 #### Open Graph (OG) タグ
 
@@ -58,7 +58,7 @@ PWA対応とブランディング。
 - ✅ robots設定
 - ✅ Google/Yandex検証コード用のプレースホルダー
 
-### 5. **構造化データ (JSON-LD)** - [/src/app/layout.tsx](../src/app/layout.tsx)
+### 5. **構造化データ (JSON-LD)** - [/src/app/layout.tsx](../../src/app/layout.tsx)
 
 Schema.orgの構造化データで検索エンジンに情報を伝達。
 
@@ -73,7 +73,7 @@ Schema.orgの構造化データで検索エンジンに情報を伝達。
 }
 ```
 
-### 6. **画像最適化** - [/next.config.js](../next.config.js)
+### 6. **画像最適化** - [/next.config.js](../../next.config.js)
 
 - ✅ AVIF/WebP自動変換
 - ✅ レスポンシブ画像サイズ
@@ -81,9 +81,9 @@ Schema.orgの構造化データで検索エンジンに情報を伝達。
 
 ### 7. **ページ別Metadata**
 
-- [/src/app/page.tsx](../src/app/page.tsx) - ホームページ
-- [/src/app/login/metadata.ts](../src/app/login/metadata.ts) - ログインページ
-- [/src/app/signup/metadata.ts](../src/app/signup/metadata.ts) - 登録ページ
+- [/src/app/page.tsx](../../src/app/page.tsx) - ホームページ
+- [/src/app/login/metadata.ts](../../src/app/login/metadata.ts) - ログインページ
+- [/src/app/signup/metadata.ts](../../src/app/signup/metadata.ts) - 登録ページ
 
 ---
 
@@ -119,7 +119,7 @@ NEXTAUTH_URL="https://yourdomain.com"
 1. [Google Search Console](https://search.google.com/search-console) にアクセス
 2. プロパティを追加
 3. 検証コードを取得
-4. [/src/app/layout.tsx](../src/app/layout.tsx) の `verification.google` に設定：
+4. [/src/app/layout.tsx](../../src/app/layout.tsx) の `verification.google` に設定：
 
 ```typescript
 verification: {

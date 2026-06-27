@@ -1,0 +1,39 @@
+name: ✨ 機能要望 / 改善
+description: 新機能・改善の提案
+title: "【Feature】"
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 概要
+      description: 何を実現したいかを簡潔に書いてください。
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 背景・目的
+      description: なぜこれが必要か（解決したい課題・ユーザー価値）。
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 提案内容 / 実装イメージ
+      description: 想定する画面・API・対象ファイルなど。
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 受け入れ条件
+      description: 完了とみなす条件をチェックリストで書いてください。
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: 補足
+      description: 関連 Issue・参考リンクなど。
