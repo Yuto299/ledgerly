@@ -109,7 +109,7 @@ DATABASE_URL="<PROD_DATABASE_URL>" npx prisma migrate status
 
 その後、Vercel で Redeploy。
 
-> 補足: 現状の `package.json` の `vercel-build` には、特定マイグレーションを `migrate resolve --applied` する暫定ハックが入っています。この根本解決は [Issue #63](https://github.com/Yuto299/ledgerly-pre/issues/63) で追跡しています。
+> 補足: 現状の `package.json` の `vercel-build` には、特定マイグレーションを `migrate resolve --applied` する暫定ハックが入っています。この根本解決は [Issue #63](https://github.com/Yuto299/Ledgerly/issues/63) で追跡しています。
 
 ---
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 # GitHub Issues 一括作成スクリプト
 set -e
-REPO="Yuto299/ledgerly-pre"
+REPO="Yuto299/Ledgerly"
 
 create_issue() {
   local title="$1"

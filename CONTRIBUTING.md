@@ -3,7 +3,7 @@
 Ledgerly の開発に参加するためのルールをまとめます。新規参画の方は、まず [docs/onboarding.md](./docs/onboarding.md) で全体像をつかんでから本ドキュメントを読んでください。
 
 - レビュアー: **@Yuto299**
-- 対象リポジトリ: `Yuto299/ledgerly-pre`
+- 対象リポジトリ: `Yuto299/Ledgerly`
 
 ---
 

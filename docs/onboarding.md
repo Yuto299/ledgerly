@@ -37,8 +37,8 @@ Ledgerly は、副業・個人事業の **顧客 / 案件 / 請求 / 入金 / �
 詳細な手順は [guides/setup.md](./guides/setup.md) にあります。最短ルートは以下のとおりです。
 
 ```bash
-git clone https://github.com/Yuto299/ledgerly-pre.git
-cd ledgerly-pre
+git clone https://github.com/Yuto299/Ledgerly.git
+cd Ledgerly
 npm install
 
 cp .env.example .env        # DATABASE_URL などを設定（DB ポートは 5433）
@@ -139,7 +139,7 @@ npm run prisma:seed      # デモデータ投入
 | 環境構築でつまずいた | [guides/setup.md](./guides/setup.md) のトラブルシューティング |
 | 本番（Vercel）でエラー | [operations/troubleshooting.md](./operations/troubleshooting.md) |
 | 要件・仕様の意図を知りたい | [design/requirements.md](./design/requirements.md) |
-| 全体の進捗・残タスク | [planning/roadmap.md](./planning/roadmap.md) / [GitHub Issues](https://github.com/Yuto299/ledgerly-pre/issues) |
+| 全体の進捗・残タスク | [planning/roadmap.md](./planning/roadmap.md) / [GitHub Issues](https://github.com/Yuto299/Ledgerly/issues) |
 | 開発ルールを確認したい | [../CONTRIBUTING.md](../CONTRIBUTING.md) |
 
 それでも解決しない場合は、遠慮なく Issue やレビューで質問してください 🙌

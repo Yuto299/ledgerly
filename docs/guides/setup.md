@@ -11,8 +11,8 @@
 ## 1. プロジェクトのクローン
 
 ```bash
-git clone https://github.com/Yuto299/ledgerly-pre.git
-cd ledgerly-pre
+git clone https://github.com/Yuto299/Ledgerly.git
+cd Ledgerly
 ```
 
 ---

@@ -50,8 +50,8 @@
 
 ```bash
 # クローン
-git clone https://github.com/Yuto299/ledgerly-pre.git
-cd ledgerly-pre
+git clone https://github.com/Yuto299/Ledgerly.git
+cd Ledgerly
 
 # 依存関係のインストール
 npm install
@@ -102,7 +102,7 @@ npm run prisma:migrate   # マイグレーション作成
 
 ## プロジェクト管理
 
-- タスクは [GitHub Issues](https://github.com/Yuto299/ledgerly-pre/issues) で管理し、Project ボードで進行状況（Todo → 作業中 → レビュー中 → Done）を可視化しています。
+- タスクは [GitHub Issues](https://github.com/Yuto299/Ledgerly/issues) で管理し、Project ボードで進行状況（Todo → 作業中 → レビュー中 → Done）を可視化しています。
 - 優先度は `priority/p0`〜`priority/p5` のラベルで表します（詳細は [CONTRIBUTING.md](./CONTRIBUTING.md#6-issue--project-ボードの運用)）。
 - はじめての方は `good first issue` ラベルの Issue からどうぞ。
 
